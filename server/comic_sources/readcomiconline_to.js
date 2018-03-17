@@ -18,7 +18,10 @@ class ReadComicOnlineTo {
         if(this.browser) {
             clearTimeout(this.browserTimeout);
         } else {
-            this.browser = await puppeteer.launch({headless: true});
+            this.browser = await puppeteer.launch({
+                args: ['--no-sandbox', '--disable-setuid-sandbox'],
+                headless: true
+            });
             this.browserTimeout = setTimeout(()=>{this.browser.close(); this.browser = null}, 1000*60);
         }
 
