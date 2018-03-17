@@ -33,15 +33,26 @@ class ReadComicOnlineTo {
         }
 
         const page = await this.browser.newPage();
-        await page.goto(url);
-        let currentContent = await page.content();
-        while(currentContent.indexOf("Checking your browser before accessing") >= 0) {
+        page.setDefaultNavigationTimeout(5000);
+        try {
+            await page.goto(url, {waitUntil: 'domcontentloaded'});
+        } catch(error) {
+            console.warn(error);
+        }
+        const currentContent = await page.content();
+        if(currentContent.indexOf("Checking your browser before accessing") >= 0) {
             console.log('readcomiconline: waiting for verification');
             await this.sleep(6000);
-            currentContent = await page.content();
+        } else {
+            return page;
         }
+
         console.log('readcomiconline: finished verification. Reloading page');
-        await page.goto(url, {waitUntil:['domcontentloaded']});
+        try {
+            await page.goto(url, {waitUntil: 'domcontentloaded'});
+        } catch(error) {
+            console.warn(error);
+        }
         return page;
     }
 
