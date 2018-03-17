@@ -49,7 +49,7 @@ export class ReaderPage extends React.Component {
                 });
 
                 for(let i = 0; i < data.totalPages; i++) {
-                    await this.loadPage(i);
+                    await this.loadPage((data.progress + i) % data.totalPages);
                 }
             })
             .catch(error => {
