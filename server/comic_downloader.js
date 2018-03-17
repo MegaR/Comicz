@@ -63,7 +63,6 @@ class ComicDownloader {
             throw new Error("Unknown comic source");
         }
         let page = await source.page(volumeName, issueNr, Number(pageNr));
-        await storage.setProgress(issueId, Number(pageNr));
 
         return page;
     }

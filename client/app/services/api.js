@@ -41,7 +41,7 @@ class API {
     }
 
     async markFinished(issueId, state) {
-        return (await fetch(`/api/markFinished/${issueId}`, {
+        return (await fetch(`/api/storage/markFinished/${issueId}`, {
             method: 'POST',
             body: JSON.stringify({state: state}),
             headers: new Headers({'content-type': 'application/json'}),
@@ -50,12 +50,21 @@ class API {
     }
 
     async markTracked(volumeId, state) {
-        return (await fetch(`/api/markTracked/${volumeId}`, {
+        return (await fetch(`/api/storage/markTracked/${volumeId}`, {
             method: 'POST',
             body: JSON.stringify({state: state}),
             headers: new Headers({'content-type': 'application/json'}),
             credentials: 'same-origin'
         })).json();
+    }
+
+    async setProgress(issueId, progress) {
+        return (await fetch(`/api/storage/setProgress/${issueId}/${progress}/`, {
+            method: 'POST',
+            headers: new Headers({'content-type': 'application/json'}),
+            credentials: 'same-origin'
+        })).json();
+
     }
 
     async getTrackedVolumes() {

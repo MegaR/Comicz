@@ -40,14 +40,17 @@ export class ReaderPage extends React.Component {
 
         const params = this.props.match.params;
         api.issueDetails(params.issueId, params.source, params.volume, params.issue)
-            .then(data => {
+            .then(async data => {
                 data.progress = data.progress>data.totalPages-1?data.totalPages-1:data.progress
 
                 this.setState({
                     pageNumber: data.progress,
                     totalPages: data.totalPages
                 });
-                return this.loadPage(data.progress);
+
+                for(let i = 0; i < data.totalPages; i++) {
+                    await this.loadPage(i);
+                }
             })
             .catch(error => {
                 console.error(error);
@@ -135,6 +138,8 @@ export class ReaderPage extends React.Component {
 
         if(pageNum === this.state.totalPages -1) {
             api.markFinished(this.props.match.params.issueId, true);
+        } else {
+            api.setProgress(this.props.match.params.issueId, pageNum);
         }
 
         this.loadPage(pageNum);
@@ -144,6 +149,7 @@ export class ReaderPage extends React.Component {
         let pageNum = this.state.pageNumber - 1;
         if(pageNum < 0) pageNum = 0;
         this.setState({pageNumber: pageNum, offsetY: 0});
+        api.setProgress(this.props.match.params.issueId, pageNum);
         this.loadPage(pageNum);
     }
 
