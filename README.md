@@ -12,6 +12,7 @@ You have to use a comicvine apikey. Without it won't work. Go get one for free!
 
 ## missing
 * Error handling (whoops)
+* History
 * Alert when a new issue is released.
 * Authentication
 * documentation, unit testing. You know: the good stuff.
