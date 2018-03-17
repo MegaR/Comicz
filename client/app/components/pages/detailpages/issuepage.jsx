@@ -60,7 +60,7 @@ export class IssuePage extends React.Component {
                 </Card>
             </div>
             <ComicSearch issue={issue}/>
-            <CharactersList items={issue.characters}/>
+            {/*<CharactersList items={issue.characters}/>*/}
         </div>
     }
 }

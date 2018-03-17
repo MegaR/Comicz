@@ -8,7 +8,7 @@ const baseUrl = 'https://comicvine.gamespot.com/api/';
 
 const volumeId = 4050;
 const issueId = 4000;
-const characterId = 4005;
+// const characterId = 4005;
 
 class comicVine {
     constructor() {
@@ -51,14 +51,14 @@ class comicVine {
                 });
         });
 
-        app.get('/api/comicvine/character/:id', (req, res) => {
-            this.character(req.params.id)
-                .then(result => res.json(result))
-                .catch(error => {
-                    console.error(error);
-                    res.status(500).json(error);
-                });
-        });
+        // app.get('/api/comicvine/character/:id', (req, res) => {
+        //     this.character(req.params.id)
+        //         .then(result => res.json(result))
+        //         .catch(error => {
+        //             console.error(error);
+        //             res.status(500).json(error);
+        //         });
+        // });
 
         app.get('/api/comicvine/trackedVolumes', (req, res) => {
             this.trackedVolumes()
@@ -75,16 +75,16 @@ class comicVine {
         let volume = this.parseVolume(data.results);
         volume = Object.assign(volume, await storage.getVolume(id));
 
-        const charIds = data.results.characters
-            .map(char => char.id).join('|');
-        data = await this.request('characters', {filter: 'id:' + charIds});
-        volume.characters = data.results
-            .map(row => this.parseCharacter(row));
+        // const charIds = data.results.characters
+        //     .map(char => char.id).join('|');
+        // data = await this.request('characters', {filter: 'id:' + charIds});
+        // volume.characters = data.results
+        //     .map(row => this.parseCharacter(row));
 
         data = await this.request('issues', {filter: 'volume:' + id});
         volume.issues = data.results
             .map(row => this.parseIssue(row))
-            .sort((a, b) => b.date.localeCompare(a.date));
+            .sort((a, b) => Number(b.issueNumber) - Number(a.issueNumber)); //b.date ? b.date.localeCompare(a.date) : 0);
 
         for(let i = 0; i < volume.issues.length; i++) {
             const issue = volume.issues[i];
@@ -98,11 +98,11 @@ class comicVine {
         let data = await this.request('issue/' + issueId + '-' + id);
         const issue = this.parseIssue(data.results);
 
-        const charIds = data.results.character_credits
-            .map(char => char.id).join('|');
-        data = await this.request('characters', {filter: 'id:' + charIds});
-        issue.characters = data.results
-            .map(row => this.parseCharacter(row));
+        // const charIds = data.results.character_credits
+        //     .map(char => char.id).join('|');
+        // data = await this.request('characters', {filter: 'id:' + charIds});
+        // issue.characters = data.results
+        //     .map(row => this.parseCharacter(row));
 
         data = await this.request('volume/' + volumeId + '-' + issue.volume.id);
         issue.volume = this.parseVolume(data.results);
@@ -110,19 +110,19 @@ class comicVine {
         return issue;
     }
 
-    async character(id) {
-        let data = await this.request('character/' + characterId + '-' + id);
-        const character = this.parseCharacter(data.results);
-
-        return character;
-    }
+    // async character(id) {
+    //     let data = await this.request('character/' + characterId + '-' + id);
+    //     const character = this.parseCharacter(data.results);
+    //
+    //     return character;
+    // }
 
     async search(query) {
         const response = await this.request('search', {query: query});
         let result = {};
-        result.characters = response.results
-            .filter(row => row['resource_type'] === 'character')
-            .map(row => this.parseCharacter(row));
+        // result.characters = response.results
+        //     .filter(row => row['resource_type'] === 'character')
+        //     .map(row => this.parseCharacter(row));
 
         result.issues = response.results
             .filter(row => row['resource_type'] === 'issue')
@@ -152,7 +152,6 @@ class comicVine {
             }
         }
 
-
         return {
             id: data.id,
             name: data.volume.name,
@@ -178,16 +177,16 @@ class comicVine {
         };
     }
 
-    parseCharacter(data) {
-        return {
-            id: data.id,
-            name: data.name,
-            thumbnail: data.image ? data.image.thumb_url : null,
-            detailsUrl: data.site_detail_url,
-            description: this.stripHTML(data.description),
-            resourceType: data.resource_type
-        }
-    }
+    // parseCharacter(data) {
+    //     return {
+    //         id: data.id,
+    //         name: data.name,
+    //         thumbnail: data.image ? data.image.thumb_url : null,
+    //         detailsUrl: data.site_detail_url,
+    //         description: this.stripHTML(data.description),
+    //         resourceType: data.resource_type
+    //     }
+    // }
 
     async request(resource, params) {
         const url = this.getUrl(resource, params);

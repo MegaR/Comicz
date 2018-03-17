@@ -55,7 +55,7 @@ export class VolumePage extends React.Component {
                 </Card>
             </div>
             <IssuesList items={volume.issues}/>
-            <CharactersList items={volume.characters}/>
+            {/*<CharactersList items={volume.characters}/>*/}
         </div>
     }
 }

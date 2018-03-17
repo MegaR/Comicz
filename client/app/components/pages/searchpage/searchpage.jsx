@@ -49,7 +49,7 @@ export class SearchPage extends React.Component {
         return <div className="results">
             <div><VolumesList items={this.state.results.volumes}/></div>
             <div><IssuesList items={this.state.results.issues}/></div>
-            <div><CharactersList items={this.state.results.characters}/></div>
+            {/*<div><CharactersList items={this.state.results.characters}/></div>*/}
         </div>
     }
 }
