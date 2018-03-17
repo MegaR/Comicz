@@ -5,12 +5,14 @@ const bodyParser = require('body-parser');
 const comicVine = require('./server/comicvine.js');
 const comicDownloader = require('./server/comic_downloader.js');
 const storage = require('./server/storage.js');
+const compression = require('compression');
 
 let app = express();
 
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({extended: true, limit: '50mb'}));
 app.use(cookieParser());
+app.use(compression());
 
 comicVine.setup(app);
 comicDownloader.setup(app);
