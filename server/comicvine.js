@@ -136,7 +136,7 @@ class comicVine {
 
     async trackedVolumes() {
         let volumes = await storage.getTrackedVolumes();
-        let ids = volumes.map(volume => volume.id);
+        let ids = volumes.map(volume => volume.id).join('|');
 
         let data = await this.request('volumes', {filter: 'id:' + ids});
         volumes = data.results.map(row => this.parseVolume(row));
