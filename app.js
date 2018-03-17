@@ -9,10 +9,10 @@ const compression = require('compression');
 
 let app = express();
 
+app.use(compression());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({extended: true, limit: '50mb'}));
 app.use(cookieParser());
-app.use(compression());
 
 comicVine.setup(app);
 comicDownloader.setup(app);
