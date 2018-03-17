@@ -22,22 +22,23 @@ class ReadComicOnlineTo {
                 args: ['--no-sandbox', '--disable-setuid-sandbox'],
                 headless: true
             });
-            this.browserTimeout = setTimeout(()=>{this.browser.close(); this.browser = null}, 1000*60);
+            this.browserTimeout = setTimeout(()=>{
+                try{
+                    this.browser.close();
+                } catch(error) {
+                    console.error(error);
+                }
+                this.browser = null;
+            }, 1000*60);
         }
 
         const page = await this.browser.newPage();
         await page.goto(url);
-        const currentContent = await page.content();
-        if(currentContent.indexOf("Checking your browser before accessing") >= 0) {
+        let currentContent = await page.content();
+        while(currentContent.indexOf("Checking your browser before accessing") >= 0) {
             console.log('readcomiconline: waiting for verification');
             await this.sleep(6000);
-            // await page.waitForNavigation({waitUntil: ['domcontentloaded']});
-            // await page.waitForFunction(() => document.body && document.body.innerHTML.indexOf("Checking your browser before accessing") === -1);
-            // try {
-            //     await page.waitForNavigation();
-            // } catch(error) {
-            //     console.error(error);
-            // }
+            currentContent = await page.content();
         }
         console.log('readcomiconline: finished verification. Reloading page');
         await page.goto(url, {waitUntil:['domcontentloaded']});
