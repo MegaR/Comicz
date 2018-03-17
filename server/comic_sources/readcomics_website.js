@@ -23,9 +23,7 @@ class ReadcomicsWebsite {
             page = '0' + page.toString();
         }
 
-        console.log('request start', new Date(), `${this.baseUrl}/uploads/manga/${volume}/chapters/${issue}/${page}.jpg`);
         const data = await fetch(`${this.baseUrl}/uploads/manga/${volume}/chapters/${issue}/${page}.jpg`);
-        console.log('request end', new Date());
         return data.buffer();
     }
 

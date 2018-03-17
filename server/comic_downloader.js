@@ -58,13 +58,11 @@ class ComicDownloader {
     }
 
     async page(issueId, sourceName, volumeName, issueNr, pageNr) {
-        console.log('hello', new Date());
         const source = comicSources.filter(source=>source.name === sourceName)[0];
         if(!source) {
             throw new Error("Unknown comic source");
         }
         let page = await source.page(volumeName, issueNr, Number(pageNr));
-        console.log('got buffer', new Date());
         return page;
     }
 
