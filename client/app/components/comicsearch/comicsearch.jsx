@@ -8,18 +8,29 @@ export class ComicSearch extends React.Component {
     constructor(props) {
         super(props);
         this.state = {results: null};
-        this.search();
+        this.search(this.props.issue);
     }
 
-    search() {
-        api.searchComic(this.props.issue)
+    search(issue) {
+        api.searchComic(issue)
             .then(results => {
+                for (let source of results) {
+                    source.bestResult = this.getBestResult(issue.volume, source.results);
+                }
                 this.setState({results: results});
             })
             .catch(error => {
                 //todo errorhandling
                 console.error(error);
             });
+    }
+
+    getBestResult(volume, results) {
+        for (let result of results) {
+            if (result.name.indexOf(volume.name) >= 0 && result.name.indexOf(volume.startYear) >= 0) {
+                return result;
+            }
+        }
     }
 
     render() {
@@ -46,13 +57,22 @@ export class ComicSearch extends React.Component {
         const issue = this.props.issue;
 
         return this.state.results.map(source => {
-            const header = <Subheader key={source.source}>{source.source}</Subheader>;
-            const items = source.results.map(result =>
-                <ListItem key={source.source + '/' + result.id} primaryText={result.name} containerElement={
-                    <Link to={`/read/${issue.id}/${source.source}/${result.id}/${this.props.issue.issueNumber}`}/>
-                }/>
-            );
-            return [header].concat(items);
+            let items = [<Subheader key={source.source}>{source.source}</Subheader>];
+            if (source.bestResult) {
+                items.push(this.getListItem(issue, source, source.bestResult));
+            }
+            items.push(<ListItem key={source.source + '/more'}
+                                 secondaryText={'More...'}
+                                 primaryTogglesNestedList={true}
+                                 nestedItems={source.results.map(result => this.getListItem(issue, source, result))} />);
+
+            return items;
         });
+    }
+
+    getListItem(issue, source, result) {
+        return <ListItem key={source.source + '/' + result.id} primaryText={result.name} containerElement={
+            <Link to={`/read/${issue.id}/${source.source}/${result.id}/${issue.issueNumber}`}/>
+        }/>
     }
 }
