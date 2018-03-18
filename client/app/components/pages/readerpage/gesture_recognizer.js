@@ -68,9 +68,11 @@ export default class GestureRecognizer {
             case 'ArrowLeft':
                 this.listener.previous();
                 break;
+            case 'NumpadSubtract':
             case 'Minus':
                 this.listener.zoom(1);
                 break;
+            case 'NumpadAdd':
             case 'Equal':
                 this.listener.zoom(-1);
                 break;
