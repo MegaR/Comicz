@@ -1,0 +1,10 @@
+{
+  "short_name": "Comicz",
+  "name": "Comicz",
+  "icons": [],
+  "start_url": "/?launcher=true",
+  "background_color": "#212121",
+  "theme_color": "#e80052",
+  "display": "standalone",
+  "orientation": "portrait"
+}

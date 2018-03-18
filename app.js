@@ -19,9 +19,13 @@ comicDownloader.setup(app);
 storage.setup(app);
 
 app.use('/public', express.static(path.join(__dirname, 'client', 'public')));
+app.use('/manifest.json', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'manifest.json'));
+});
 app.use('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'client', 'index.html'));
 });
+
 
 app.listen(3000);
 console.log('listening on port 3000');
