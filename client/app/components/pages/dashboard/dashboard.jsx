@@ -28,7 +28,7 @@ export class Dashboard extends React.Component {
 
         return <div className="dashboardpage">
             <Card className="volume-card">
-                <GridList className="volume-grid" padding={8}>
+                <GridList className="volume-grid" padding={16}>
                     <Subheader>Followed volumes</Subheader>
                     {this.items(this.state.volumes)}
                 </GridList>

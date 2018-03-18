@@ -5,24 +5,28 @@
     padding: 0 16px 16px;
   }
 
-  .volume-grid > div {
-    width: auto !important;
-  }
+  .volume-grid {
+    justify-content: center !important;
 
-  .volume-grid > div:first-child {
-    width: 100% !important;
-  }
+    > div {
+      width: auto !important;
 
-  .volume-grid > div > a > div {
-    display: none !important;
-  }
+      &:first-child {
+        width: 100% !important;
+      }
 
-  .volume-grid > div:hover > a > div {
-    height: 100% !important;
-    display: flex !important;
+      > a > div {
+        display: none !important;
+      }
 
-    > div > div {
-      white-space: normal !important;
+      &:hover > a > div {
+        height: 100% !important;
+        display: flex !important;
+
+        > div > div {
+          white-space: normal !important;
+        }
+      }
     }
   }
 }
