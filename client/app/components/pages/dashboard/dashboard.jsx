@@ -1,5 +1,5 @@
 import React from "react";
-import {Card, List, ListItem, Subheader} from "material-ui";
+import {Card, GridList, GridTile, List, ListItem, Subheader} from "material-ui";
 import {LoadingIndicator} from "../../loadingindicator/loadingindicator";
 import api from "../../../services/api";
 import "./dashboard.scss"
@@ -27,11 +27,11 @@ export class Dashboard extends React.Component {
         if (!this.state.volumes) return <LoadingIndicator/>;
 
         return <div className="dashboardpage">
-            <Card>
-                <List className="list volumes">
+            <Card className="volume-card">
+                <GridList className="volume-grid" padding={8}>
                     <Subheader>Followed volumes</Subheader>
                     {this.items(this.state.volumes)}
-                </List>
+                </GridList>
             </Card>
         </div>
     }
@@ -39,16 +39,14 @@ export class Dashboard extends React.Component {
     items(volumes) {
         if (!volumes) return [];
 
-        return volumes.map(
-            (volume) =>
-                <ListItem
-                    key={volume.id}
-                    primaryText={volume.name + ' (' + volume.startYear + ')'}
-                    leftAvatar={volume.thumbnail ? <img src={volume.thumbnail}/> : null}
-                    secondaryText={volume.description}
-                    secondaryTextLines={2}
-                    containerElement={<Link to={"/volume/" + volume.id}/>}
-                />
+        return volumes.map((volume) =>
+            <GridTile
+                key={volume.id}
+                title={volume.name}
+                className="volume"
+                containerElement={<Link to={"/volume/" + volume.id}/>}>
+                {volume.thumbnail ? <img src={volume.thumbnail}/> : null}
+            </GridTile>
         )
     }
 }
