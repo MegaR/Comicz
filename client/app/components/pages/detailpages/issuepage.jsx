@@ -6,6 +6,7 @@ import "./detailpage.scss";
 import {CharactersList} from "../../lists/characterslist";
 import Link from "react-router-dom/es/Link";
 import {ComicSearch} from "../../comicsearch/comicsearch";
+import {ReadChip} from "../../readchip/readchip";
 
 export class IssuePage extends React.Component {
 
@@ -47,7 +48,7 @@ export class IssuePage extends React.Component {
                     <div className="header">
                         <h1>
                             {issue.name} #{issue.issueNumber}&nbsp;
-                            <Chip onClick={()=>{this.toggleRead()}} style={{display: 'inline-block'}}>{issue.finished?'Read':'Unread'}</Chip>
+                            <ReadChip read={issue.finished} progress={issue.progress} onClick={()=>{this.toggleRead()}}/>
                         </h1>
                     </div>
                     <img src={issue.thumbnail}/>

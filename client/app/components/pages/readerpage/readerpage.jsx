@@ -53,6 +53,7 @@ export class ReaderPage extends React.Component {
                     promises.push(this.loadPage((data.progress + i) % data.totalPages));
                 }
                 await Promise.all(promises);
+                console.info('finished downloading pages');
             })
             .catch(error => {
                 console.error(error);
