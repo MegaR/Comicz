@@ -85,6 +85,7 @@ class Storage {
         const issue = await this.getIssue(issueId);
         issue.progress = progress;
         await this.saveIssue(issue);
+        return issueId;
     }
 
     async getProgress(issueId) {
