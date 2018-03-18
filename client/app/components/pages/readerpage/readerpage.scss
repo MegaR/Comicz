@@ -49,4 +49,17 @@
     border-radius: 6px;
     background-color: rgba(44,44,44,0.6);
   }
+
+  .zoom-in {
+    position: absolute !important;
+    right: 10px;
+    bottom: 24px;
+  }
+
+  .zoom-out {
+    position: absolute !important;
+    right: 40px;
+    bottom: 24px;
+
+  }
 }

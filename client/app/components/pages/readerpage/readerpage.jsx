@@ -8,7 +8,7 @@ import GestureRecognizer from "./gesture_recognizer";
 export class ReaderPage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {pageNumber: 0, totalPages: 0, pages: [], scale: 1, offsetX: 0, offsetY: 0};
+        this.state = {pageNumber: 0, totalPages: 0, pages: [], zoom: 0, offsetX: 0, offsetY: 0};
     }
 
     get canvas() {
@@ -17,6 +17,10 @@ export class ReaderPage extends React.Component {
 
     get currentPage() {
         return this.state.pages[this.state.pageNumber];
+    }
+
+    getScale(zoom) {
+        return 1 + Math.tan(zoom * 0.1);
     }
 
     componentDidMount() {
@@ -41,7 +45,7 @@ export class ReaderPage extends React.Component {
         const params = this.props.match.params;
         api.issueDetails(params.issueId, params.source, params.volume, params.issue)
             .then(async data => {
-                data.progress = data.progress>data.totalPages-1?data.totalPages-1:data.progress
+                data.progress = data.progress>data.totalPages-1?data.totalPages-1:data.progress;
 
                 this.setState({
                     pageNumber: data.progress,
@@ -78,14 +82,12 @@ export class ReaderPage extends React.Component {
     }
 
     zoom(direction) {
-        let scale = this.state.scale;
-        let offsetX = this.state.offsetX / scale, offsetY = this.state.offsetY / scale;
-        if (direction > 0) {
-            scale = scale / 0.8;
-        } else {
-            scale = scale * 0.8;
-        }
-        this.setState({scale: scale, offsetX: offsetX * scale, offsetY: offsetY * scale});
+        console.log(direction);
+        let zoom = this.state.zoom;
+        let offsetX = this.state.offsetX / this.getScale(zoom), offsetY = this.state.offsetY / this.getScale(zoom);
+        zoom += direction;
+        if(this.getScale(zoom) <= 0) zoom -= direction;
+        this.setState({zoom: zoom, offsetX: offsetX * this.getScale(zoom), offsetY: offsetY * this.getScale(zoom)});
     }
 
     async loadPage(pageNumber) {
@@ -101,7 +103,7 @@ export class ReaderPage extends React.Component {
                 return prevState;
             });
         } catch (error) {
-            console.error(error);
+            console.error(arguments);
             //todo errorhandling
         }
     }
@@ -112,7 +114,7 @@ export class ReaderPage extends React.Component {
         context.imageSmoothingQuality = 'high';
         context.clearRect(0, 0, canvas.width, canvas.height);
         if (this.currentPage) {
-            const height = this.canvas.height * this.state.scale;
+            const height = this.canvas.height * this.getScale(this.state.zoom);
             const width = this.currentPage.naturalWidth / this.currentPage.naturalHeight * height;
 
             let x = (window.innerWidth / 2) - (width / 2) + this.state.offsetX;
@@ -172,6 +174,12 @@ export class ReaderPage extends React.Component {
             <IconButton className="previous-page" iconClassName="material-icons" onClick={() => {
                 this.previousPage()
             }}>keyboard_arrow_left</IconButton>
+            <IconButton className="zoom-out" iconClassName="material-icons" onClick={() => {
+                this.zoom(-1)
+            }}>zoom_out</IconButton>
+            <IconButton className="zoom-in" iconClassName="material-icons" onClick={() => {
+                this.zoom(1);
+            }}>zoom_in</IconButton>
             {this.state.totalPages && <div className="page-numbers">{this.state.pageNumber + 1} / {this.state.totalPages}</div>}
             {!this.currentPage && <LoadingIndicator/>}
         </div>;
