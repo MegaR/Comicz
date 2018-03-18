@@ -48,9 +48,11 @@ export class ReaderPage extends React.Component {
                     totalPages: data.totalPages
                 });
 
+                const promises = [];
                 for(let i = 0; i < data.totalPages; i++) {
-                    await this.loadPage((data.progress + i) % data.totalPages);
+                    promises.push(this.loadPage((data.progress + i) % data.totalPages));
                 }
+                await Promise.all(promises);
             })
             .catch(error => {
                 console.error(error);
