@@ -1,8 +1,8 @@
 const storage = require('./storage.js');
 
 const comicSources = [
-    require('./comic_sources/readcomiconline_to.js'),
-    require('./comic_sources/readcomics_website.js')
+    require('./comic_sources/readcomics_website.js'),
+    require('./comic_sources/readcomiconline_to.js')
 ];
 
 
