@@ -60,7 +60,8 @@ function shouldCache(request) {
 }
 
 function cacheFirst(request) {
-    return !request.url.includes('/api/comicvine/');
+    return false;
+    // return !request.url.includes('/api/comicvine/');
 }
 
 function request(request) {
