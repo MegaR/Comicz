@@ -28,6 +28,9 @@ app.use('/public', express.static(path.join(__dirname, 'client', 'public')));
 app.use('/manifest.json', (req, res) => {
     res.sendFile(path.join(__dirname, 'client', 'manifest.json'));
 });
+app.use('/favicon.ico', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'favicon.ico'));
+});
 app.use('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'client', 'index.html'));
 });
