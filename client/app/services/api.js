@@ -30,14 +30,14 @@ class API {
     }
 
     async searchComic(issue) {
-        return (await this.request('/api/search', {
+        return (await this.request('/api/downloader/search', {
             method: 'POST',
             body: JSON.stringify(issue)
         })).json();
     }
 
     async page(issueId, source, volume, issue, page) {
-        let data = await this.request(`/api/page/${issueId}/${source}/${volume}/${issue}/${page}`);
+        let data = await this.request(`/api/downloader/page/${issueId}/${source}/${volume}/${issue}/${page}`);
         data = await data.blob();
         const image = new Image();
         image.src = URL.createObjectURL(data);
@@ -49,7 +49,7 @@ class API {
     }
 
     async issueDetails(issueId, source, volume, issue) {
-        return (await this.request(`/api/issueDetails/${issueId}/${source}/${volume}/${issue}`)).json();
+        return (await this.request(`/api/downloader/issueDetails/${issueId}/${source}/${volume}/${issue}`)).json();
     }
 
     async markFinished(issueId, state) {
@@ -78,20 +78,20 @@ class API {
     }
 
     async login(password) {
-        return (await this.request(`/api/login`, {
+        return (await this.request(`/api/auth/login`, {
             method: 'POST',
             body: JSON.stringify({password: password})
         })).text();
     }
 
     async logout() {
-        return (await this.request(`/api/logout`, {
+        return (await this.request(`/api/auth/logout`, {
             method: 'POST'
         })).text();
     }
 
     async setPassword(password) {
-        return (await this.request(`/api/setPassword`, {
+        return (await this.request(`/api/auth/setPassword`, {
             method: 'POST',
             body: JSON.stringify({password: password})
         })).text();

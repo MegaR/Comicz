@@ -2,7 +2,8 @@ var CACHE_NAME = 'comicz-cache';
 
 var filesToCache = [
     '/',
-    '/public/bundle.js'
+    '/public/bundle.js',
+    '/serviceworker.js'
 ];
 
 self.addEventListener('install', function (event) {
@@ -12,7 +13,14 @@ self.addEventListener('install', function (event) {
             .then(function (cache) {
                 return cache.addAll(filesToCache);
             })
+            .then(function() {
+                return self.skipWaiting();
+            })
     );
+});
+
+self.addEventListener('activate', function() {
+    return self.clients.claim();
 });
 
 self.addEventListener('fetch', function (event) {
@@ -58,7 +66,7 @@ function cacheFirst(request) {
 function request(request) {
     var reqCopy = request.clone();
 
-    return fetch(reqCopy, {credentials: 'same-origin', mode: 'cors'})
+    return fetch(reqCopy)
         .then(function (response) {
             if (!response || response.status !== 200 || response.type !== 'basic') {
                 return response;

@@ -9,7 +9,7 @@ const comicSources = [
 
 class ComicDownloader {
     setup(app) {
-        app.post('/search', (req, res) => {
+        app.post('/downloader/search', (req, res) => {
             this.search(req.body)
                 .then(result => res.json(result))
                 .catch(error => {
@@ -18,7 +18,7 @@ class ComicDownloader {
                 });
         });
 
-        app.get('/issueDetails/:issueId/:source/:volumeName/:issue', (req, res) => {
+        app.get('/downloader/issueDetails/:issueId/:source/:volumeName/:issue', (req, res) => {
             this.details(
                 req.params.issueId,
                 req.params.source,
@@ -27,7 +27,7 @@ class ComicDownloader {
             ).then(details => res.json(details));
         });
 
-        app.get('/page/:issueId/:source/:volumeName/:issue/:page?', (req, res) => {
+        app.get('/downloader/page/:issueId/:source/:volumeName/:issue/:page?', (req, res) => {
             this.page(
                 req.params.issueId,
                 req.params.source,

@@ -8,7 +8,7 @@ class Auth {
     }
 
     setup(app) {
-        app.post('/login', (req, res) => this.login(req, res).catch(error => res.status(500).send(error)) );
+        app.post('/auth/login', (req, res) => this.login(req, res).catch(error => res.status(500).send(error)) );
 
         app.use((req, res, next) => {
             if (!this.validate(req.headers['authentication'])) {
@@ -18,11 +18,11 @@ class Auth {
             next();
         });
 
-        app.post('/setPassword', (req, res) => this.setPassword(req.body.password)
+        app.post('/auth/setPassword', (req, res) => this.setPassword(req.body.password)
             .then(data => res.send(data))
             .catch(error => res.status(500).send(error)));
 
-        app.post('/logout', (req, res) => this.logout(req, res));
+        app.post('/auth/logout', (req, res) => this.logout(req, res));
     }
 
     async validate(token) {
