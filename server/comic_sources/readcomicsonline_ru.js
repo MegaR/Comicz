@@ -2,11 +2,11 @@ const fetch = require('node-fetch');
 
 class ReadcomicsWebsite {
     constructor() {
-        this.baseUrl = "http://readcomics.website/";
+        this.baseUrl = "http://readcomicsonline.ru/";
     }
 
     get name() {
-        return 'readcomics.website';
+        return 'readcomicsonline.ru';
     }
 
     async search(issue) {

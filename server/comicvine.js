@@ -16,7 +16,7 @@ class comicVine {
     }
 
     setup(app) {
-        app.get('/api/comicvine/search/:query', (req, res) => {
+        app.get('/comicvine/search/:query', (req, res) => {
             this.search(req.params.query)
                 .then(result => res.json(result))
                 .catch(error => {
@@ -25,7 +25,7 @@ class comicVine {
                 });
         });
 
-        app.get('/api/comicvine/volume/:id', (req, res) => {
+        app.get('/comicvine/volume/:id', (req, res) => {
             this.volume(Number(req.params.id))
                 .then(result => res.json(result))
                 .catch(error => {
@@ -34,7 +34,7 @@ class comicVine {
                 });
         });
 
-        app.get('/api/comicvine/issue/:id', (req, res) => {
+        app.get('/comicvine/issue/:id', (req, res) => {
             let data;
 
             this.issue(req.params.id)
@@ -60,7 +60,7 @@ class comicVine {
         //         });
         // });
 
-        app.get('/api/comicvine/trackedVolumes', (req, res) => {
+        app.get('/comicvine/trackedVolumes', (req, res) => {
             this.trackedVolumes()
                 .then(result => res.json(result))
                 .catch(error => {

@@ -7,7 +7,7 @@ class Storage {
     }
 
     setup(app) {
-        app.post('/api/storage/markFinished/:issueId', (req, res) => {
+        app.post('/storage/markFinished/:issueId', (req, res) => {
             this.setFinished(Number(req.params.issueId), req.body.state)
                 .then(data => {
                     res.json(data);
@@ -18,7 +18,7 @@ class Storage {
                 });
         });
 
-        app.post('/api/storage/markTracked/:volumeId', (req, res) => {
+        app.post('/storage/markTracked/:volumeId', (req, res) => {
             this.setVolumeTracked(Number(req.params.volumeId), req.body.state)
                 .then(data => {
                     res.json(data);
@@ -29,7 +29,7 @@ class Storage {
                 });
         });
 
-        app.post('/api/storage/setProgress/:issueId/:progress', (req, res) => {
+        app.post('/storage/setProgress/:issueId/:progress', (req, res) => {
             this.setProgress(Number(req.params.issueId), Number(req.params.progress))
                 .then(data =>{
                     res.json(data);

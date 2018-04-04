@@ -1,8 +1,8 @@
 import React from "react";
-import {Card, GridList, GridTile, List, ListItem, Subheader} from "material-ui";
+import {Card, GridList, GridTile, Subheader} from "material-ui";
 import {LoadingIndicator} from "../../loadingindicator/loadingindicator";
 import api from "../../../services/api";
-import "./dashboard.scss"
+import "./dashboard.scss";
 import {Link} from "react-router-dom";
 
 export class Dashboard extends React.Component {

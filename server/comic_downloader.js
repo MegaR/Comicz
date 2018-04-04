@@ -1,14 +1,15 @@
 const storage = require('./storage.js');
 
 const comicSources = [
-    require('./comic_sources/readcomics_website.js'),
+    require('./comic_sources/readcomicsonline_ru.js'),
+    require('./comic_sources/comicextra_com.js'),
     require('./comic_sources/readcomiconline_to.js')
 ];
 
 
 class ComicDownloader {
     setup(app) {
-        app.post('/api/search', (req, res) => {
+        app.post('/search', (req, res) => {
             this.search(req.body)
                 .then(result => res.json(result))
                 .catch(error => {
@@ -17,7 +18,7 @@ class ComicDownloader {
                 });
         });
 
-        app.get('/api/issueDetails/:issueId/:source/:volumeName/:issue', (req, res) => {
+        app.get('/issueDetails/:issueId/:source/:volumeName/:issue', (req, res) => {
             this.details(
                 req.params.issueId,
                 req.params.source,
@@ -26,7 +27,7 @@ class ComicDownloader {
             ).then(details => res.json(details));
         });
 
-        app.get('/api/page/:issueId/:source/:volumeName/:issue/:page?', (req, res) => {
+        app.get('/page/:issueId/:source/:volumeName/:issue/:page?', (req, res) => {
             this.page(
                 req.params.issueId,
                 req.params.source,
