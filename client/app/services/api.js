@@ -77,6 +77,10 @@ class API {
         return (await this.request(`/api/comicvine/trackedVolumes`)).json();
     }
 
+    async getHistory() {
+        return (await this.request(`/api/comicvine/history`)).json();
+    }
+
     async login(password) {
         return (await this.request(`/api/auth/login`, {
             method: 'POST',

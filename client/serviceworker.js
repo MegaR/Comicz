@@ -28,7 +28,7 @@ self.addEventListener('fetch', function (event) {
 
     if (cacheFirst(event.request)) {
         event.respondWith(
-            caches.match(event.request)
+            caches.match(event.request, {ignoreSearch: true})
                 .then(function (response) {
                     if (response) {
                         return response;
@@ -42,7 +42,7 @@ self.addEventListener('fetch', function (event) {
         event.respondWith(
             request(event.request).catch(error => {
                 console.warn(error);
-                return caches.match(event.request)
+                return caches.match(event.request, {ignoreSearch: true})
                     .then(function (response) {
                         if (response) {
                             return response;

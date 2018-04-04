@@ -3,6 +3,7 @@
 
   .volume-card {
     padding: 0 16px 16px;
+    margin-bottom: 32px;
   }
 
   .volume-grid {
@@ -25,6 +26,37 @@
 
         > div > div {
           white-space: normal !important;
+        }
+      }
+    }
+  }
+
+  .issue-card {
+    padding: 0 16px 16px;
+  }
+
+  .issue-grid {
+    justify-content: center !important;
+
+    > div {
+      width: auto !important;
+
+      &:first-child {
+        width: 100% !important;
+      }
+
+      > a {
+        > div {
+          height: 100% !important;
+          display: flex !important;
+
+          > div > div {
+            white-space: normal !important;
+          }
+        }
+
+        > div:nth-child(2) {
+          //badge
         }
       }
     }

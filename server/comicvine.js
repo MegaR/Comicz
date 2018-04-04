@@ -68,6 +68,15 @@ class comicVine {
                     res.status(500).json(error);
                 })
         });
+
+        app.get('/comicvine/history', (req, res) => {
+            this.history()
+                .then(result => res.json(result))
+                .catch(error => {
+                    console.error(error);
+                    res.status(500).json(error);
+                });
+        });
     }
 
     async volume(id) {
@@ -141,6 +150,19 @@ class comicVine {
         let data = await this.request('volumes', {filter: 'id:' + ids});
         volumes = data.results.map(row => this.parseVolume(row));
         return volumes;
+    }
+
+    async history() {
+        let issues = await storage.getHistory();
+        let ids = issues.map(issue => issue.id).join('|');
+
+        let data = await this.request('issues', {filter: 'id:' + ids});
+        issues = data.results.map(row => this.parseIssue(row));
+        for(let i = 0; i < issues.length; i++) {
+            const issue = issues[i];
+            issues[i] = Object.assign(issue, await storage.getIssue(issue.id));
+        }
+        return issues.sort((a,b)=>b.updatedAt - a.updatedAt);
     }
 
     parseIssue(data) {

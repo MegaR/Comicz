@@ -104,6 +104,11 @@ class Storage {
         const volumes = await this.volumes.find();
         return volumes.filter(vol => vol.tracked);
     }
+
+    async getHistory() {
+        const issues = await this.issues.find();
+        return issues.sort((a, b) => b.updatedAt - a.updatedAt).splice(0, 10);
+    }
 }
 
 module.exports = new Storage();
