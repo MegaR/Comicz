@@ -25,6 +25,9 @@ storage.setup(apiRouter);
 app.use('/api', apiRouter);
 
 app.use('/public', express.static(path.join(__dirname, 'client', 'public')));
+app.use('/serviceworker.js', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'serviceworker.js'));
+});
 app.use('/manifest.json', (req, res) => {
     res.sendFile(path.join(__dirname, 'client', 'manifest.json'));
 });
