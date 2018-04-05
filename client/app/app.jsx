@@ -46,12 +46,6 @@ class App extends React.Component {
         });
     }
 
-    logout() {
-        auth.logout();
-        this.redirectTo = '/login';
-        this.setState({authenticated: false});
-    }
-
     render() {
         let to = null;
         if(this.redirectTo) {
@@ -71,7 +65,6 @@ class App extends React.Component {
                         <ToolbarGroup>
                             <MenuItem primaryText="Dashboard"  onClick={()=>this.router.history.push('/')}/>
                             <MenuItem primaryText="Settings"  onClick={()=>this.router.history.push('/settings')}/>
-                            <MenuItem primaryText="Logout"  onClick={()=>this.logout()}/>
                         </ToolbarGroup>
                     </Toolbar>}
                     {to && <Redirect to={to}/>}

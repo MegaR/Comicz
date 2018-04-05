@@ -2,6 +2,8 @@ import "./settingspage.scss"
 import React from "react";
 import {Card, RaisedButton, TextField} from "material-ui";
 import api from "../../../services/api";
+import Link from "react-router-dom/es/Link";
+import auth from "../../../services/auth";
 
 export default class SettingsPage extends React.Component {
 
@@ -16,6 +18,12 @@ export default class SettingsPage extends React.Component {
             .catch(error => console.error(error));
     }
 
+    logout() {
+        auth.logout();
+        this.redirectTo = '/login';
+        this.setState({authenticated: false});
+    }
+
     render() {
         return <div className="settings-page">
             <Card className="card">
@@ -25,6 +33,12 @@ export default class SettingsPage extends React.Component {
                 <RaisedButton primary={true} fullWidth={true} onClick={() => this.changePassword()}
                               style={{marginTop: '16px'}}>Change</RaisedButton>
             </Card>
+
+            <RaisedButton primary={true} onClick={() => this.logout()} className={'logoutButton'}
+                          containerElement={<Link to={'/login'}/>}
+                            style={{}}>
+                Logout
+            </RaisedButton>
         </div>;
     }
 }
