@@ -67,10 +67,9 @@ export class Dashboard extends React.Component {
             <GridTile
                 key={issue.id}
                 title={issue.name + ' #' + issue.issueNumber}
-                className="issue"
+                className={'issue ' + (issue.finished?'finished':issue.progress?'reading':'')}
                 containerElement={<Link to={"/issue/" + issue.id}/>}>
                 {issue.thumbnail ? <img src={issue.thumbnail}/> : null}
-                <ReadChip read={issue.finished} progress={issue.progress}/>
             </GridTile>
         )
     }

@@ -9,6 +9,10 @@
   .volume-grid {
     justify-content: center !important;
 
+    .volume {
+      border-radius: 2%;
+    }
+
     > div {
       width: auto !important;
 
@@ -37,6 +41,20 @@
 
   .issue-grid {
     justify-content: center !important;
+
+    .issue {
+      border-bottom: 4px solid rgb(72, 72, 72);
+      border-top: 4px solid rgb(72, 72, 72);
+      border-radius: 2%;
+    }
+
+    .finished {
+      border-color: rgb(245, 0, 87);
+    }
+
+    .reading {
+      border-color: rgb(255, 64, 129);
+    }
 
     > div {
       width: auto !important;
