@@ -26,11 +26,15 @@ export class ComicSearch extends React.Component {
     }
 
     getBestResult(volume, results) {
-        for (let result of results) {
-            if (result.name.indexOf(volume.name) >= 0 && result.name.indexOf(volume.startYear) >= 0) {
-                return result;
-            }
+        let filtered = results.filter(item => item.name.includes(volume.name) && item.name.includes(volume.startYear));
+        if(filtered.length === 0) {
+            filtered = results.filter(item => item.name.includes(volume.name));
         }
+
+        return filtered.sort((a,b) => a.name.length - b.name.length)[0];
+        // const search = volume.name;
+        // const sorted = results.sort((a,b) => levenshtein(a.name, search) - levenshtein(b.name, search));
+        // return sorted[0];
     }
 
     render() {
