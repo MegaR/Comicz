@@ -28,17 +28,6 @@ export class IssuesList extends React.Component {
                     secondaryTextLines={2}
                     containerElement={<Link to={"/issue/" + issue.id}/>}
                 />
-            // <li key={issue.id}>
-            //     <p>
-            //         <img src={issue.thumbnail}/>
-            //         <strong>{issue.name} #{issue.issueNumber}</strong><br/>
-            //         <i>{issue.date}</i><br/>
-            //         <span>{issue.description}</span>
-            //     </p>
-            //     <Link to={"/issue/"+issue.id}>Open</Link>
-            //     <a href={issue.detailsUrl} target="_blank" className="button">ComicVine</a>
-            //     <div className="clear"/>
-            // </li>
         )
     }
 }

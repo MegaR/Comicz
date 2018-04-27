@@ -129,16 +129,20 @@ class comicVine {
     }
 
     async search(query) {
-        const response = await this.request('search', {query: query});
+        let data = await Promise.all([
+            await this.request('search', {query: query, resources: 'issue'}),
+            await this.request('search', {query: query, resources: 'volume,'}),
+            await this.request('story_arcs', {filter: 'name:'+query})
+        ]);
+        data = data.map(items => items.results);
+
         let result = {};
-
-        result.issues = response.results
-            .filter(row => row['resource_type'] === 'issue')
-            .map(row => this.parseIssue(row));
-
-        result.volumes = response.results
-            .filter(row => row['resource_type'] === 'volume')
-            .map(row => this.parseVolume(row));
+        result.issues = data[0]
+            .map(issue => this.parseIssue(issue));
+        result.volumes = data[1]
+            .map(volume => this.parseVolume(volume));
+        result.arcs = data[2]
+            .map(arc => this.parseArc(arc));
         return result;
     }
 
@@ -175,7 +179,7 @@ class comicVine {
 
         return {
             id: data.id,
-            name: data.volume.name,
+            name: data.volume?data.volume.name:data.name,
             thumbnail: data.image ? data.image.thumb_url : null,
             detailsUrl: data.site_detail_url,
             description: this.stripHTML(data.description),

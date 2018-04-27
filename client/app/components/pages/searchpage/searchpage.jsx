@@ -3,9 +3,8 @@ import api from "../../../services/api";
 import "./searchpage.scss";
 import {VolumesList} from "../../lists/volumeslist";
 import {IssuesList} from "../../lists/issueslist";
-import {CharactersList} from "../../lists/characterslist";
-import {Card} from "material-ui";
 import {LoadingIndicator} from "../../loadingindicator/loadingindicator";
+import {ArcList} from "../../lists/arclist";
 
 export class SearchPage extends React.Component {
     constructor(props) {
@@ -39,7 +38,6 @@ export class SearchPage extends React.Component {
 
     render() {
         return <div className="searchpage">
-            {/*<strong>Search: {this.props.match.params.query}</strong>*/}
             {!this.state.results && <LoadingIndicator/>}
             {this.state.results && this.results()}
         </div>;
@@ -49,7 +47,7 @@ export class SearchPage extends React.Component {
         return <div className="results">
             <div><VolumesList items={this.state.results.volumes}/></div>
             <div><IssuesList items={this.state.results.issues}/></div>
-            {/*<div><CharactersList items={this.state.results.characters}/></div>*/}
+            <div><ArcList items={this.state.results.arcs}/></div>
         </div>
     }
 }

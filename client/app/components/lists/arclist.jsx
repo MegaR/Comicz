@@ -3,12 +3,12 @@ import {Link} from "react-router-dom";
 import {Avatar, Card, List, ListItem, Subheader} from "material-ui";
 import './lists.scss';
 
-export class VolumesList extends React.Component {
+export class ArcList extends React.Component {
     render() {
         return <div>
             <Card>
                 <List className="list volumes">
-                    <Subheader>Volumes</Subheader>
+                    <Subheader>Story Arcs</Subheader>
                     {this.items()}
                 </List>
             </Card>
@@ -19,14 +19,12 @@ export class VolumesList extends React.Component {
         if (!this.props.items) return [];
 
         return this.props.items.map(
-            (volume) =>
+            (arc) =>
                 <ListItem
-                    key={volume.id}
-                    primaryText={volume.name + ' (' + volume.startYear + ')'}
-                    leftAvatar={volume.thumbnail ? <img src={volume.thumbnail}/> : null}
-                    secondaryText={volume.description}
-                    secondaryTextLines={2}
-                    containerElement={<Link to={"/volume/" + volume.id}/>}
+                    key={arc.id}
+                    primaryText={arc.name}
+                    leftAvatar={arc.thumbnail ? <img src={arc.thumbnail}/> : null}
+                    containerElement={<Link to={"/arc/" + arc.id}/>}
                 />
         )
     }

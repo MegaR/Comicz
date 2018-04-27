@@ -27,16 +27,6 @@ export class CharactersList extends React.Component {
                     secondaryTextLines={2}
                     containerElement={<Link to={"/character/" + character.id}/>}
                 />
-            // <li key={character.id}>
-            //     <p>
-            //         <img src={character.thumbnail}/>
-            //         <strong>{character.name}</strong><br/>
-            //         <span>{character.description}</span>
-            //     </p>
-            //     <Link to={"/character/"+character.id}>Open</Link>
-            //     <a href={character.detailsUrl} target="_blank" className="button">ComicVine</a>
-            //     <div className="clear"/>
-            // </li>
         )
     }
 }
