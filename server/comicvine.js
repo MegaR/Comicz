@@ -119,6 +119,12 @@ class comicVine {
         arc.issues = data.results
             .map(row => this.parseIssue(row))
             .sort((a, b) => Number(b.issueNumber) - Number(a.issueNumber));
+
+        for(let i = 0; i < arc.issues.length; i++) {
+            const issue = arc.issues[i];
+            arc.issues[i] = Object.assign(issue, await storage.getIssue(issue.id));
+        }
+
         return arc;
     }
 
