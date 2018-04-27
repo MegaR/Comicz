@@ -8,7 +8,7 @@ const baseUrl = 'https://comicvine.gamespot.com/api/';
 
 const volumeId = 4050;
 const issueId = 4000;
-// const characterId = 4005;
+const arcId = 4045;
 
 class comicVine {
     constructor() {
@@ -51,14 +51,16 @@ class comicVine {
                 });
         });
 
-        // app.get('/api/comicvine/character/:id', (req, res) => {
-        //     this.character(req.params.id)
-        //         .then(result => res.json(result))
-        //         .catch(error => {
-        //             console.error(error);
-        //             res.status(500).json(error);
-        //         });
-        // });
+        app.get('/comicvine/arc/:id', (req, res) => {
+            let data;
+
+            this.arc(req.params.id)
+                .then(result => res.json(result))
+                .catch(error => {
+                    console.error(error);
+                    res.status(500).json(error);
+                });
+        });
 
         app.get('/comicvine/trackedVolumes', (req, res) => {
             this.trackedVolumes()
@@ -84,12 +86,6 @@ class comicVine {
         let volume = this.parseVolume(data.results);
         volume = Object.assign(volume, await storage.getVolume(id));
 
-        // const charIds = data.results.characters
-        //     .map(char => char.id).join('|');
-        // data = await this.request('characters', {filter: 'id:' + charIds});
-        // volume.characters = data.results
-        //     .map(row => this.parseCharacter(row));
-
         data = await this.request('issues', {filter: 'volume:' + id});
         volume.issues = data.results
             .map(row => this.parseIssue(row))
@@ -104,34 +100,31 @@ class comicVine {
     }
 
     async issue(id) {
-        let data = await this.request('issue/' + issueId + '-' + id);
+        let data = await this.request(`issue/${issueId}-${id}`);
         const issue = this.parseIssue(data.results);
 
-        // const charIds = data.results.character_credits
-        //     .map(char => char.id).join('|');
-        // data = await this.request('characters', {filter: 'id:' + charIds});
-        // issue.characters = data.results
-        //     .map(row => this.parseCharacter(row));
-
-        data = await this.request('volume/' + volumeId + '-' + issue.volume.id);
+        data = await this.request(`volume/${volumeId}-${issue.volume.id}`);
         issue.volume = this.parseVolume(data.results);
 
         return issue;
     }
 
-    // async character(id) {
-    //     let data = await this.request('character/' + characterId + '-' + id);
-    //     const character = this.parseCharacter(data.results);
-    //
-    //     return character;
-    // }
+    async arc(id) {
+        let data = await this.request(`story_arc/${arcId}-${id}`);
+        const arc = this.parseArc(data.results);
+
+        const issueIds = data.results.issues.map(issue => issue.id).join('|');
+        data = await this.request('issues', {filter: 'id:' + issueIds});
+
+        arc.issues = data.results
+            .map(row => this.parseIssue(row))
+            .sort((a, b) => Number(b.issueNumber) - Number(a.issueNumber));
+        return arc;
+    }
 
     async search(query) {
         const response = await this.request('search', {query: query});
         let result = {};
-        // result.characters = response.results
-        //     .filter(row => row['resource_type'] === 'character')
-        //     .map(row => this.parseCharacter(row));
 
         result.issues = response.results
             .filter(row => row['resource_type'] === 'issue')
@@ -183,7 +176,8 @@ class comicVine {
             resourceType: data.resource_type,
             issueNumber: data.issue_number,
             date: data.store_date,
-            volume: volume
+            volume: volume,
+            storyArcs: data.story_arc_credits ? data.story_arc_credits.map(arc => ({name: arc.name, id: arc.id})) : []
         };
     }
 
@@ -199,16 +193,16 @@ class comicVine {
         };
     }
 
-    // parseCharacter(data) {
-    //     return {
-    //         id: data.id,
-    //         name: data.name,
-    //         thumbnail: data.image ? data.image.thumb_url : null,
-    //         detailsUrl: data.site_detail_url,
-    //         description: this.stripHTML(data.description),
-    //         resourceType: data.resource_type
-    //     }
-    // }
+    parseArc(data) {
+        return {
+            id: data.id,
+            name: data.name,
+            thumbnail: data.image ? data.image.thumb_url : null,
+            detailsUrl: data.site_detail_url,
+            description: this.stripHTML(data.description),
+            resourceType: data.resource_type
+        };
+    }
 
     async request(resource, params) {
         const url = this.getUrl(resource, params);

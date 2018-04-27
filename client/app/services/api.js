@@ -25,6 +25,10 @@ class API {
         return (await this.request('/api/comicvine/issue/' + id)).json();
     }
 
+    async arc(id) {
+        return (await this.request('/api/comicvine/arc/' + id)).json();
+    }
+
     async character(id) {
         return (await this.request('/api/comicvine/character/' + id)).json();
     }

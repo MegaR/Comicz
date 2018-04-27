@@ -22,6 +22,7 @@ import PrivateRoute from "./components/privateroute";
 import auth from "./services/auth";
 import LoginPage from "./components/pages/login/loginpage";
 import SettingsPage from "./components/pages/settings/settingspage";
+import {ArcPage} from "./components/pages/detailpages/arcpage";
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
@@ -73,6 +74,7 @@ class App extends React.Component {
                         <PrivateRoute exact path="/search/:query" component={SearchPage}/>
                         <PrivateRoute exact path="/volume/:id" component={VolumePage}/>
                         <PrivateRoute exact path="/issue/:id" component={IssuePage}/>
+                        <PrivateRoute exact path="/arc/:id" component={ArcPage}/>
                         <PrivateRoute exact path="/character/:id" component={CharacterPage}/>
                         <PrivateRoute exact path="/read/:issueId/:source/:volume/:issue" component={ReaderPage}/>
                         <Route exact path="/login" component={LoginPage}/>

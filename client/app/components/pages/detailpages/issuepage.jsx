@@ -1,9 +1,8 @@
 import React from "react";
 import api from "../../../services/api";
-import {Card, Chip, FlatButton} from "material-ui";
+import {Card, FlatButton, List, ListItem, Subheader} from "material-ui";
 import {LoadingIndicator} from "../../loadingindicator/loadingindicator";
 import "./detailpage.scss";
-import {CharactersList} from "../../lists/characterslist";
 import Link from "react-router-dom/es/Link";
 import {ComicSearch} from "../../comicsearch/comicsearch";
 import {ReadChip} from "../../readchip/readchip";
@@ -33,8 +32,8 @@ export class IssuePage extends React.Component {
                 issue.finished = !issue.finished;
                 this.setState({issue: issue});
             }).catch(error => {
-                console.error(error);
-                //todo errorhandling
+            console.error(error);
+            //todo errorhandling
         });
     }
 
@@ -48,16 +47,31 @@ export class IssuePage extends React.Component {
                     <div className="header">
                         <h1>
                             {issue.name} #{issue.issueNumber}&nbsp;
-                            <ReadChip read={issue.finished} progress={issue.progress} onClick={()=>{this.toggleRead()}}/>
+                            <ReadChip read={issue.finished} progress={issue.progress} onClick={() => {
+                                this.toggleRead()
+                            }}/>
                         </h1>
                     </div>
                     <img src={issue.thumbnail}/>
-                    <FlatButton containerElement={<Link to={'/volume/'+issue.volume.id} />} secondary={true}>{issue.volume.name}</FlatButton>
+                    <FlatButton containerElement={<Link to={'/volume/' + issue.volume.id}/>}
+                                secondary={true}>{issue.volume.name}</FlatButton>
                     <p>{issue.description}</p>
                     <div className="buttons">
                         <FlatButton secondary={true} href={issue.detailsUrl} target="_blank">Comic Vine</FlatButton>
                     </div>
                     <div className="clearfix"/>
+                </Card>
+            </div>
+            <div>
+                <Card>
+                    <List>
+                        <Subheader>Story arcs</Subheader>
+                        {issue.storyArcs.map(arc =>
+                            <ListItem key={arc.id} containerElement={<Link to={`/arc/${arc.id}`}/>}>
+                                {arc.name}
+                                </ListItem>
+                        )}
+                    </List>
                 </Card>
             </div>
             <ComicSearch issue={issue}/>
