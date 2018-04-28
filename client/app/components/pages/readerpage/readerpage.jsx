@@ -175,19 +175,11 @@ export class ReaderPage extends React.Component {
                 {document.webkitCurrentFullScreenElement?'fullscreen_exit':'fullscreen'}
             </IconButton>
             }
-            <IconButton className="close" iconClassName="material-icons" onClick={this.close}>close</IconButton>
-            <IconButton className="next-page" iconClassName="material-icons" onClick={() => {
-                this.nextPage()
-            }}>keyboard_arrow_right</IconButton>
-            <IconButton className="previous-page" iconClassName="material-icons" onClick={() => {
-                this.previousPage()
-            }}>keyboard_arrow_left</IconButton>
-            <IconButton className="zoom-out" iconClassName="material-icons" onClick={() => {
-                this.zoom(-1)
-            }}>zoom_out</IconButton>
-            <IconButton className="zoom-in" iconClassName="material-icons" onClick={() => {
-                this.zoom(1);
-            }}>zoom_in</IconButton>
+            <IconButton className="close" iconClassName="material-icons" onClick={() => this.close()}>close</IconButton>
+            <IconButton className="next-page" iconClassName="material-icons" onClick={() => this.nextPage()}>keyboard_arrow_right</IconButton>
+            <IconButton className="previous-page" iconClassName="material-icons" onClick={() => this.previousPage()}>keyboard_arrow_left</IconButton>
+            <IconButton className="zoom-out" iconClassName="material-icons" onClick={() => this.zoom(-0.25)}>zoom_out</IconButton>
+            <IconButton className="zoom-in" iconClassName="material-icons" onClick={() => this.zoom(0.25)}>zoom_in</IconButton>
             {this.state.totalPages && <div className="page-numbers">{this.state.pageNumber + 1} / {this.state.totalPages}</div>}
             {!this.currentPage && <LoadingIndicator/>}
         </div>;

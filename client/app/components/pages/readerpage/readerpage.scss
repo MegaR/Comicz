@@ -7,8 +7,17 @@
   background-color: #212121;
 
   &.hide-ui {
-    .previous-page, .next-page, .close, .fullscreen, .page-numbers, .zoom-in, .zoom-out {
-      display: none !important;
+    .previous-page {
+      left: -100px;
+    }
+    .next-page {
+      right: -100px;
+    }
+    .close, .fullscreen {
+      top: -100px;
+    }
+    .page-numbers, .zoom-in, .zoom-out {
+      bottom: -100px;
     }
   }
 
@@ -19,36 +28,35 @@
 
   .previous-page {
     position: absolute !important;
+    transition: all 2ms ease-in-out;
     left: 0;
-    top: 50%;
+    top: calc(50% - 24px);
   }
 
   .next-page {
     position: absolute !important;
+    transition: all 2ms ease-in-out;
     right: 0;
-    top: 50%;
+    top: calc(50% - 24px);
   }
 
   .close {
     position: absolute !important;
+    transition: all 2ms ease-in-out;
     right: 0;
     top: 0;
   }
 
   .fullscreen {
     position: absolute !important;
+    transition: all 2ms ease-in-out;
     right: 32px;
     top: 0;
   }
 
-  .loading-indicator {
-    position: absolute !important;
-    left: calc(50% - 35px);
-    top: calc(50% - 35px);
-  }
-
   .page-numbers {
     position: absolute !important;
+    transition: all 2ms ease-in-out;
     right: 16px;
     bottom: 8px;
     color: white;
@@ -59,14 +67,21 @@
 
   .zoom-in {
     position: absolute !important;
+    transition: all 2ms ease-in-out;
     right: 10px;
     bottom: 24px;
   }
 
   .zoom-out {
     position: absolute !important;
+    transition: all 2ms ease-in-out;
     right: 40px;
     bottom: 24px;
+  }
 
+  .loading-indicator {
+    position: absolute !important;
+    left: calc(50% - 70px);
+    top: calc(50% - 70px);
   }
 }
