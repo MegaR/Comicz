@@ -5,6 +5,13 @@
   right: 0;
   bottom: 0;
   background-color: #212121;
+
+  &.hide-ui {
+    .previous-page, .next-page, .close, .fullscreen, .page-numbers, .zoom-in, .zoom-out {
+      display: none !important;
+    }
+  }
+
   canvas {
     width: 100%;
     height: 100%;

@@ -1,63 +1,64 @@
+import Hammer from 'hammerjs';
+
 export default class GestureRecognizer {
     constructor(element, listener) {
         this.listener = listener;
+        this.element = element;
+
+        const hammer = new Hammer.Manager(element);
+        const pinch = new Hammer.Pinch();
+        const pan = new Hammer.Pan();
+        const swipe = new Hammer.Swipe({direction: Hammer.DIRECTION_HORIZONTAL, velocity: 2});
+        const tap = new Hammer.Tap();
+
+        pinch.recognizeWith(pan);
+        pinch.recognizeWith(swipe);
+        pan.recognizeWith(swipe);
+        hammer.add([pan, pinch, swipe, tap]);
+
+        hammer.on('panstart', event => {
+            this.panX = event.deltaX;
+            this.panY = event.deltaY;
+        });
+        hammer.on('pan', event => {
+            this.listener.move({
+                x: event.deltaX - this.panX,
+                y: event.deltaY - this.panY
+            });
+
+            this.panX = event.deltaX;
+            this.panY = event.deltaY;
+        });
+        hammer.on('pinchstart', event => {
+           this.pinch = event.scale;
+        });
+        hammer.on('pinch', event => {
+            this.listener.zoom(-(event.scale - this.pinch));
+            this.pinch = event.scale;
+        });
+
+        hammer.on('swipeleft', () => {
+            this.listener.next();
+        });
+
+        hammer.on('swiperight', () => {
+            this.listener.previous();
+        });
+
+        hammer.on('tap', ()=> {
+            this.listener.tap();
+        });
 
         this.keyUpListener = event => this.keyUp(event.code);
         this.keyDownListener = event => this.keyDown(event.code);
         window.addEventListener('keyup', this.keyUpListener);
         window.addEventListener('keydown', this.keyDownListener);
         element.addEventListener('mousewheel', event => this.scroll(event.deltaY));
-        element.addEventListener('mousedown', event => this.mouseDown(event));
-        element.addEventListener('mouseup', () => this.mouseUp());
-        element.addEventListener('mousemove', event => this.mouseMove(event));
-        element.addEventListener('blur', () => this.mouseUp());
-
-        element.addEventListener('touchstart', event => this.touchStart(event));
-        element.addEventListener('touchend', event => this.touchEnd(event));
-        element.addEventListener('touchmove', event => this.touchMove(event));
     }
 
     stopEventListeners() {
         window.removeEventListener('keyup', this.keyUpListener);
         window.removeEventListener('keydown', this.keyDownListener);
-    }
-
-    touchStart(event) {
-        // this.isTouchDown = true;
-        this.touchX = event.touches[0].clientX;
-        this.touchY = event.touches[0].clientY;
-        if (event.touches.length >= 2) {
-            this.pinch = this.getDistance(event);
-            console.log(this.pinch);
-        }
-        event.preventDefault();
-    }
-
-    touchEnd(event) {
-        // this.isTouchDown = false;
-        this.pinch = false;
-        event.preventDefault();
-    }
-
-    touchMove(event) {
-        // if(this.isTouchDown) {
-        if (!this.pinch) {
-            //drag
-            this.listener.move({
-                x: event.touches[0].clientX - this.touchX,
-                y: event.touches[0].clientY - this.touchY
-            });
-            this.touchX = event.touches[0].clientX;
-            this.touchY = event.touches[0].clientY;
-        } else {
-            //pinch
-            const newDistance = this.getDistance(event);
-            // this.listener.zoom((newDistance - this.pinch)*5);
-            this.pinch = newDistance;
-        }
-        event.preventDefault();
-
-        // }
     }
 
     keyUp(keyCode) {
@@ -115,7 +116,7 @@ export default class GestureRecognizer {
     }
 
     scroll(deltaY) {
-        this.listener.zoom(deltaY > 0 ? 1 : -1);
+        this.listener.zoom(deltaY > 0 ? 0.5 : -0.5);
     }
 
     getDistance(event) {

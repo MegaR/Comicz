@@ -1,14 +1,14 @@
 import React from "react";
 import './readerpage.scss';
 import api from "../../../services/api";
-import {FlatButton, FontIcon, IconButton} from "material-ui";
+import {IconButton} from "material-ui";
 import {LoadingIndicator} from "../../loadingindicator/loadingindicator";
 import GestureRecognizer from "./gesture_recognizer";
 
 export class ReaderPage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {pageNumber: 0, totalPages: 0, pages: [], zoom: 0, offsetX: 0, offsetY: 0};
+        this.state = {pageNumber: 0, totalPages: 0, pages: [], zoom: 0, offsetX: 0, offsetY: 0, showUI: true};
     }
 
     get canvas() {
@@ -20,7 +20,7 @@ export class ReaderPage extends React.Component {
     }
 
     getScale(zoom) {
-        return 1 + Math.tan(zoom * 0.1);
+        return 1+zoom;
     }
 
     componentDidMount() {
@@ -39,7 +39,8 @@ export class ReaderPage extends React.Component {
                     offsetY: this.state.offsetY + offset.y
                 });
             },
-            scroll: direction => this.zoom(direction)
+            scroll: direction => this.zoom(direction),
+            tap: () => this.toggleUI()
         });
 
         const params = this.props.match.params;
@@ -69,10 +70,17 @@ export class ReaderPage extends React.Component {
         window.removeEventListener('resize', this.resizeListener);
         document.removeEventListener('webkitfullscreenchange', this.fullscreenListener);
         this.gestureRecognizer.stopEventListeners();
+        if(document.webkitCurrentFullScreenElement) {
+            document.webkitExitFullscreen();
+        }
     }
 
     componentDidUpdate() {
         this.renderCanvas();
+    }
+
+    toggleUI() {
+        this.setState({showUI: !this.state.showUI});
     }
 
     resize() {
@@ -82,12 +90,10 @@ export class ReaderPage extends React.Component {
     }
 
     zoom(direction) {
-        console.log(direction);
         let zoom = this.state.zoom;
-        let offsetX = this.state.offsetX / this.getScale(zoom), offsetY = this.state.offsetY / this.getScale(zoom);
         zoom += direction;
         if(this.getScale(zoom) <= 0) zoom -= direction;
-        this.setState({zoom: zoom, offsetX: offsetX * this.getScale(zoom), offsetY: offsetY * this.getScale(zoom)});
+        this.setState({zoom: zoom});
     }
 
     async loadPage(pageNumber) {
@@ -139,7 +145,7 @@ export class ReaderPage extends React.Component {
     nextPage() {
         let pageNum = this.state.pageNumber + 1;
         if(pageNum > this.state.totalPages - 1) pageNum = this.state.totalPages - 1;
-        this.setState({pageNumber: pageNum, offsetY: 0});
+        this.setState({pageNumber: pageNum, offsetY: 0, offsetX: 0});
 
         if(pageNum === this.state.totalPages -1) {
             api.markFinished(this.props.match.params.issueId, true);
@@ -153,13 +159,15 @@ export class ReaderPage extends React.Component {
     previousPage() {
         let pageNum = this.state.pageNumber - 1;
         if(pageNum < 0) pageNum = 0;
-        this.setState({pageNumber: pageNum, offsetY: 0});
+        this.setState({pageNumber: pageNum, offsetY: 0, offsetX: 0});
         api.setProgress(this.props.match.params.issueId, pageNum);
         this.loadPage(pageNum);
     }
 
     render() {
-        return <div className="readerpage">
+        const classes = ["readerpage"];
+        if(!this.state.showUI) classes.push('hide-ui');
+        return <div className={classes.join(' ')}>
             <canvas ref="canvas"/>
             {document.body.webkitRequestFullScreen &&
             <IconButton className="fullscreen" iconClassName="material-icons"
