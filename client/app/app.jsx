@@ -23,6 +23,7 @@ import auth from "./services/auth";
 import LoginPage from "./components/pages/login/loginpage";
 import SettingsPage from "./components/pages/settings/settingspage";
 import {ArcPage} from "./components/pages/detailpages/arcpage";
+import {ErrorBoundary} from "./components/errorboundary";
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
@@ -69,18 +70,20 @@ class App extends React.Component {
                         </ToolbarGroup>
                     </Toolbar>}
                     {to && <Redirect to={to}/>}
-                    <Switch>
-                        <PrivateRoute exact path="/" component={Dashboard}/>
-                        <PrivateRoute exact path="/search/:query" component={SearchPage}/>
-                        <PrivateRoute exact path="/volume/:id" component={VolumePage}/>
-                        <PrivateRoute exact path="/issue/:id" component={IssuePage}/>
-                        <PrivateRoute exact path="/arc/:id" component={ArcPage}/>
-                        <PrivateRoute exact path="/character/:id" component={CharacterPage}/>
-                        <PrivateRoute exact path="/read/:issueId/:source/:volume/:issue" component={ReaderPage}/>
-                        <Route exact path="/login" component={LoginPage}/>
-                        <Route exact path="/settings" component={SettingsPage}/>
-                        <Route component={ErrorPage}/>
-                    </Switch>
+                    <ErrorBoundary>
+                        <Switch>
+                            <PrivateRoute exact path="/" component={Dashboard}/>
+                            <PrivateRoute exact path="/search/:query" component={SearchPage}/>
+                            <PrivateRoute exact path="/volume/:id" component={VolumePage}/>
+                            <PrivateRoute exact path="/issue/:id" component={IssuePage}/>
+                            <PrivateRoute exact path="/arc/:id" component={ArcPage}/>
+                            <PrivateRoute exact path="/character/:id" component={CharacterPage}/>
+                            <PrivateRoute exact path="/read/:issueId/:source/:volume/:issue" component={ReaderPage}/>
+                            <Route exact path="/login" component={LoginPage}/>
+                            <Route exact path="/settings" component={SettingsPage}/>
+                            <Route component={ErrorPage}/>
+                        </Switch>
+                    </ErrorBoundary>
                 </div>
             </Router>
         </MuiThemeProvider>;
