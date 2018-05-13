@@ -1,14 +1,15 @@
 import React from "react";
 import './readerpage.scss';
 import api from "../../../services/api";
-import {IconButton} from "material-ui";
+import {Card, IconButton} from "material-ui";
 import {LoadingIndicator} from "../../loadingindicator/loadingindicator";
 import GestureRecognizer from "./gesture_recognizer";
+import {ErrorBoundary} from "../../errorboundary";
 
 export class ReaderPage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {pageNumber: 0, totalPages: 0, pages: [], zoom: 0, offsetX: 0, offsetY: 0, showUI: true};
+        this.state = {pageNumber: 0, totalPages: 0, pages: [], zoom: 0, offsetX: 0, offsetY: 0, showUI: true, error: null};
     }
 
     get canvas() {
@@ -48,6 +49,10 @@ export class ReaderPage extends React.Component {
             .then(async data => {
                 data.progress = data.progress>data.totalPages-1?data.totalPages-1:data.progress;
 
+                if(data.totalPages == 0) {
+                    this.setState({error: "Error issue number not found!"});
+                }
+
                 this.setState({
                     pageNumber: data.progress,
                     totalPages: data.totalPages
@@ -62,7 +67,7 @@ export class ReaderPage extends React.Component {
             })
             .catch(error => {
                 console.error(error);
-                //todo error handling
+                this.setState({error: error});
             });
     }
 
@@ -109,12 +114,14 @@ export class ReaderPage extends React.Component {
                 return prevState;
             });
         } catch (error) {
-            console.error(arguments);
-            //todo errorhandling
+            console.error(error);
+            this.setState({error: error});
         }
     }
 
     renderCanvas() {
+        if(this.state.error) return;
+
         const canvas = this.canvas;
         const context = canvas.getContext('2d');
         context.imageSmoothingQuality = 'high';
@@ -165,6 +172,15 @@ export class ReaderPage extends React.Component {
     }
 
     render() {
+        if(this.state.error) {
+            return <div>
+                <Card>
+                    <h1>Something went wrong.</h1>
+                    <pre>{'' + this.state.error}</pre>
+                </Card>
+            </div>;
+        }
+
         const classes = ["readerpage"];
         if(!this.state.showUI) classes.push('hide-ui');
         return <div className={classes.join(' ')}>

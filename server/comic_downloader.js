@@ -30,7 +30,11 @@ class ComicDownloader {
                 req.params.source,
                 req.params.volumeName,
                 req.params.issue
-            ).then(details => res.json(details));
+            ).then(details => res.json(details))
+            .catch(error => {
+                console.error(error);
+                res.status(500).json(error);
+            });
         });
 
         app.get('/downloader/page/:issueId/:source/:volumeName/:issue/:page?', (req, res) => {
