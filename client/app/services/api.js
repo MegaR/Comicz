@@ -33,11 +33,8 @@ class API {
         return (await this.request('/api/comicvine/character/' + id)).json();
     }
 
-    async searchComic(issue) {
-        return (await this.request('/api/downloader/search', {
-            method: 'POST',
-            body: JSON.stringify(issue)
-        })).json();
+    async searchComic(volumeName) {
+        return (await this.request('/api/downloader/search/' + volumeName)).json();
     }
 
     async page(issueId, source, volume, issue, page) {

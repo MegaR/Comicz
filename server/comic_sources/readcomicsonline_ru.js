@@ -9,9 +9,8 @@ class ReadcomicsWebsite {
         return 'readcomicsonline.ru';
     }
 
-    async search(issue) {
-        const query = [issue.volume.name].join(' ');
-        let data = await fetch(this.baseUrl+'search?query='+query);
+    async search(volumeName) {
+        let data = await fetch(this.baseUrl+'search?query='+volumeName);
         data = await data.json();
         data = data.suggestions.map(result => ({name: result.value, id: result.data}));
         return data;

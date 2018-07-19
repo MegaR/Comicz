@@ -9,9 +9,8 @@ class ComicExtraCom {
         return 'ComicExtra.com';
     }
 
-    async search(issue) {
-        const query = [issue.volume.name].join(' ');
-        let data = await fetch(this.baseUrl+'comic-search?key='+query);
+    async search(volumeName) {
+        let data = await fetch(this.baseUrl+'comic-search?key='+volumeName);
         data = await data.text();
         data = data.match(/<div class="cartoon-box">[\s\S]*?<\/div>/g);
 

@@ -15,8 +15,8 @@ class ComicDownloader {
     }
 
     setup(app) {
-        app.post('/downloader/search', (req, res) => {
-            this.search(req.body)
+        app.get('/downloader/search/:volumeName', (req, res) => {
+            this.search(req.params.volumeName)
                 .then(result => res.json(result))
                 .catch(error => {
                     console.error(error);
@@ -55,20 +55,20 @@ class ComicDownloader {
         });
     }
 
-    async search(data) {
-        const cacheResult = this.cache.get('search/'+JSON.stringify(data));
+    async search(volumeName) {
+        const cacheResult = this.cache.get('search/'+volumeName);
         if(cacheResult) return cacheResult;
 
         let results = [];
         for(let source of comicSources) {
             try {
-                results.push({source: source.name, results: await source.search(data)});
+                results.push({source: source.name, results: await source.search(volumeName)});
             } catch(error) {
                 console.error(error);
             }
         }
 
-        this.cache.store('search/'+JSON.stringify(data), results);
+        this.cache.store('search/'+volumeName, results);
         return results;
     }
 

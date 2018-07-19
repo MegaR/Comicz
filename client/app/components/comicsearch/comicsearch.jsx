@@ -12,7 +12,7 @@ export class ComicSearch extends React.Component {
     }
 
     search(issue) {
-        api.searchComic(issue)
+        api.searchComic(issue.volume.name)
             .then(results => {
                 for (let source of results) {
                     source.bestResult = this.getBestResult(issue.volume, source.results);
