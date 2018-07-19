@@ -27,8 +27,9 @@ self.addEventListener('fetch', function (event) {
     if (!shouldCache(event.request)) return;
 
     if (cacheFirst(event.request)) {
+        var hasQuery = event.request.url.indexOf('?') != -1;
         event.respondWith(
-            caches.match(event.request, {ignoreSearch: true})
+            caches.match(event.request, {ignoreSearch: hasQuery})
                 .then(function (response) {
                     if (response) {
                         return response;
@@ -42,7 +43,8 @@ self.addEventListener('fetch', function (event) {
         event.respondWith(
             request(event.request).catch(error => {
                 console.warn(error);
-                return caches.match(event.request, {ignoreSearch: true})
+                var hasQuery = event.request.url.indexOf('?') != -1;
+                return caches.match(event.request, {ignoreSearch: hasQuery})
                     .then(function (response) {
                         if (response) {
                             return response;
