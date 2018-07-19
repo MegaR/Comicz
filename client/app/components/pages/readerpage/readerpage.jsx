@@ -1,7 +1,7 @@
 import React from "react";
 import './readerpage.scss';
 import api from "../../../services/api";
-import {Card, IconButton} from "material-ui";
+import {Card, IconButton, LinearProgress} from "material-ui";
 import {LoadingIndicator} from "../../loadingindicator/loadingindicator";
 import GestureRecognizer from "./gesture_recognizer";
 import {ErrorBoundary} from "../../errorboundary";
@@ -9,7 +9,7 @@ import {ErrorBoundary} from "../../errorboundary";
 export class ReaderPage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {pageNumber: 0, totalPages: 0, pages: [], zoom: 0, offsetX: 0, offsetY: 0, showUI: true, error: null};
+        this.state = {pageNumber: 0, totalPages: 0, pages: [], zoom: 0, offsetX: 0, offsetY: 0, downloadProgress: 0, showUI: true, error: null};
     }
 
     get canvas() {
@@ -111,6 +111,7 @@ export class ReaderPage extends React.Component {
             const page = await api.page(params.issueId, params.source, params.volume, params.issue, pageNumber);
             this.setState((prevState) => {
                 prevState.pages[pageNumber] = page;
+                prevState.downloadProgress++;
                 return prevState;
             });
         } catch (error) {
@@ -197,7 +198,9 @@ export class ReaderPage extends React.Component {
             <IconButton className="zoom-out" iconClassName="material-icons" onClick={() => this.zoom(-0.25)}>zoom_out</IconButton>
             <IconButton className="zoom-in" iconClassName="material-icons" onClick={() => this.zoom(0.25)}>zoom_in</IconButton>
             {this.state.totalPages && <div className="page-numbers">{this.state.pageNumber + 1} / {this.state.totalPages}</div>}
-            {!this.currentPage && <LoadingIndicator/>}
+            {this.state.downloadProgress != this.state.totalPages && 
+                <LinearProgress className="linear-progress" mode={this.state.downloadProgress==0?'indeterminate':'determinate'} value={this.state.downloadProgress / this.state.totalPages * 100}/>
+            }
         </div>;
     }
 

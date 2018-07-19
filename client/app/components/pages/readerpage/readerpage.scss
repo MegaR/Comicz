@@ -84,4 +84,11 @@
     left: calc(50% - 70px);
     top: calc(50% - 70px);
   }
+
+  .linear-progress {
+    position: absolute !important;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
 }
