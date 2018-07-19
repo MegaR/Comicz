@@ -1,28 +1,48 @@
 import React from "react";
 import api from "../../services/api";
 import {Card, List, ListItem, Subheader} from "material-ui";
-import {LoadingIndicator} from "../loadingindicator/loadingindicator";
+import {LoadingIndicator, LoadingIndicatorSmall} from "../loadingindicator/loadingindicator";
 import Link from "react-router-dom/es/Link";
+import {CircularProgress} from "material-ui";
 
 export class ComicSearch extends React.Component {
     constructor(props) {
         super(props);
         this.state = {results: null};
-        this.search(this.props.issue);
+        this.search(this.props.issue).catch((error) => {
+            //todo error handling
+            console.error(error);
+        });
     }
 
-    search(issue) {
-        api.searchComic(issue.volume.name)
-            .then(results => {
-                for (let source of results) {
-                    source.bestResult = this.getBestResult(issue.volume, source.results);
+    async search(issue) {
+        const sources = await api.comicSources();
+        let results = sources.map(item => ({source: item}) );
+        this.setState({results: results});
+
+        sources.forEach(x => {
+            const source = x;
+            api.searchComic(source, issue.volume.name)
+            .then(issues => {
+                for(let i = 0; i < results.length; i++) {
+                    if(results[i].source == source) {
+                        results[i].results = issues;
+                        results[i].bestResult = this.getBestResult(issue.volume, issues);
+                        this.setState({results: results});
+                    }
                 }
-                this.setState({results: results});
             })
             .catch(error => {
-                //todo errorhandling
                 console.error(error);
+
+                for(let i = 0; i < results.length; i++) {
+                    if(results[i].source == source) {
+                        results[i].results = issues;
+                        this.setState({results: results});
+                    }
+                }
             });
+        })
     }
 
     getBestResult(volume, results) {
@@ -62,9 +82,16 @@ export class ComicSearch extends React.Component {
 
         return this.state.results.map(source => {
             let items = [<Subheader key={source.source}>{source.source}</Subheader>];
+
+            if(!source.results) {
+                items.push(<LoadingIndicatorSmall key={source.source+ '/loading'}/>);
+                return items;
+            }
+
             if (source.bestResult) {
                 items.push(this.getListItem(issue, source, source.bestResult));
             }
+
             items.push(<ListItem key={source.source + '/more'}
                                  secondaryText={'More...'}
                                  primaryTogglesNestedList={true}

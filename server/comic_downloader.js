@@ -15,13 +15,17 @@ class ComicDownloader {
     }
 
     setup(app) {
-        app.get('/downloader/search/:volumeName', (req, res) => {
-            this.search(req.params.volumeName)
+        app.get('/downloader/search/:source/:volumeName', (req, res) => {
+            this.search(req.params.source, req.params.volumeName)
                 .then(result => res.json(result))
                 .catch(error => {
                     console.error(error);
                     res.status(500).json(error);
                 });
+        });
+
+        app.get('/downloader/sources', (req, res) => {
+            res.json(comicSources.map(source => source.name));
         });
 
         app.get('/downloader/issueDetails/:issueId/:source/:volumeName/:issue', (req, res) => {
@@ -55,20 +59,21 @@ class ComicDownloader {
         });
     }
 
-    async search(volumeName) {
-        const cacheResult = this.cache.get('search/'+volumeName);
-        if(cacheResult) return cacheResult;
+    async search(sourceName, volumeName) {
+        const cacheResult = this.cache.get(`search/${sourceName}/${volumeName}`);
+        if(cacheResult) {return cacheResult;}
 
-        let results = [];
-        for(let source of comicSources) {
-            try {
-                results.push({source: source.name, results: await source.search(volumeName)});
-            } catch(error) {
-                console.error(error);
-            }
+        let source = comicSources.filter(item => item.name == sourceName)[0];
+
+        let results;
+        try {
+            results = await source.search(volumeName);
+        } catch(error) {
+            console.error(error);
+            return [];
         }
-
-        this.cache.store('search/'+volumeName, results);
+        
+        this.cache.store(`search/${sourceName}/${volumeName}`, results);
         return results;
     }
 
