@@ -1,15 +1,28 @@
-FROM node
+FROM node:8.14-alpine
 
-RUN apt-get update && apt-get install -yq libgconf-2-4
-RUN apt-get update && apt-get install -y wget --no-install-recommends \
-    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-    && apt-get update \
-    && apt-get install -y google-chrome-unstable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst ttf-freefont \
-      --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get purge --auto-remove -y curl \
-    && rm -rf /src/*.deb
+ENV CHROME_BIN="/usr/bin/chromium-browser"\
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD="true"
+RUN set -x \
+    && apk update \
+    && apk upgrade \
+    # replacing default repositories with edge ones
+    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" > /etc/apk/repositories \
+    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
+    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories \
+    \
+    # Add the packages
+    && apk add --no-cache dumb-init curl make gcc g++ python linux-headers binutils-gold gnupg libstdc++ nss chromium \
+    \
+    && npm install puppeteer@1.11.0 \
+    \
+    # Do some cleanup
+    && apk del --no-cache make gcc g++ python binutils-gold gnupg libstdc++ \
+    && rm -rf /usr/include \
+    && rm -rf /var/cache/apk/* /root/.node-gyp /usr/share/man /tmp/* \
+    && echo
+
+#install python for npm dependencies
+RUN apk update && apk add yarn python g++ make && rm -rf /var/cache/apk/*
 
 COPY . /app/
 WORKDIR /app/
@@ -21,4 +34,5 @@ EXPOSE 3000
 VOLUME ["/app/data"]
 ENV comicvine_api _
 
+ENTRYPOINT ["/usr/bin/dumb-init"]
 CMD npm run-script start

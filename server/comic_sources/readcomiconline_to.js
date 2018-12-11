@@ -17,6 +17,7 @@ class ReadComicOnlineTo {
             clearTimeout(this.browserTimeout);
         } else {
             this.browser = await puppeteer.launch({
+                executablePath: '/usr/bin/chromium-browser',
                 args: ['--no-sandbox', '--disable-setuid-sandbox'],
                 headless: true
             });
