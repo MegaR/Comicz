@@ -3,7 +3,8 @@ const Cache = require('./cache.js');
 
 const comicSources = [
     require('./comic_sources/readcomicsonline_ru.js'),
-    require('./comic_sources/comicextra_com.js')
+    require('./comic_sources/comicextra_com.js'),
+    require('./comic_sources/readcomicsonline_me')
 ];
 
 

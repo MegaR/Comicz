@@ -106,7 +106,6 @@ class ReadComicOnlineTo {
     async urls(volume, issue) {
         const browserPage = await this.getPage(this.baseUrl + `Comic/${volume}/Issue-${issue}`);
         const data = await browserPage.content();
-console.log(data);
         const regex = /lstImages\.push\("(.*?)"\)/g;
         let urls = [];
         let match;

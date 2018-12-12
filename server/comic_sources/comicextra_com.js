@@ -35,7 +35,6 @@ class ComicExtraCom {
     async details(volume, issue) {
         let data = await fetch(`${this.baseUrl}${volume}/chapter-${issue}`);
         data = await data.text();
-        console.log(`${this.baseUrl}${volume}/chapter-${issue}`);
         data = /<div class="label1">of (.*?)<\/div>/g.exec(data)[1];
         return {totalPages: Number(data)};
     }
