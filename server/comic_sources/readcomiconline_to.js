@@ -1,9 +1,13 @@
 const fetch = require('node-fetch');
 const puppeteer = require('puppeteer');
 
+const fs = require('fs');
+const chromiumPath = '/usr/bin/chromium-browser';
+const useChromiumPath = fs.existsSync(chromiumPath);
+
 class ReadComicOnlineTo {
     constructor() {
-        this.baseUrl = "http://readcomiconline.to/";
+        this.baseUrl = "https://readcomiconline.to/";
         this.browser = null;
         this.browserTimeout = null;
     }
@@ -16,8 +20,9 @@ class ReadComicOnlineTo {
         if(this.browser) {
             clearTimeout(this.browserTimeout);
         } else {
+
             this.browser = await puppeteer.launch({
-                executablePath: '/usr/bin/chromium-browser',
+                executablePath: useChromiumPath?chromiumPath:null,
                 args: ['--no-sandbox', '--disable-setuid-sandbox'],
                 headless: true
             });
@@ -41,7 +46,7 @@ class ReadComicOnlineTo {
         const currentContent = await page.content();
         if(currentContent.indexOf("Checking your browser before accessing") >= 0) {
             console.log('readcomiconline: waiting for verification');
-            await this.sleep(6000);
+            await this.sleep(8000);
         } else {
             return page;
         }
@@ -101,7 +106,7 @@ class ReadComicOnlineTo {
     async urls(volume, issue) {
         const browserPage = await this.getPage(this.baseUrl + `Comic/${volume}/Issue-${issue}`);
         const data = await browserPage.content();
-
+console.log(data);
         const regex = /lstImages\.push\("(.*?)"\)/g;
         let urls = [];
         let match;
