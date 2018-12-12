@@ -11,8 +11,5 @@ To run it `docker run -p 3000:3000 -e comicvine_api=YOUR_COMICVINE_API_KEY comic
 You have to use a comicvine apikey. Without it won't work. Go get one for free!
 
 ## missing
-* Error handling (whoops)
-* History
 * Alert when a new issue is released.
-* Authentication
 * documentation, unit testing. You know: the good stuff.

@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 
 class ComicExtraCom {
     constructor() {
-        this.baseUrl = "http://comicextra.com/";
+        this.baseUrl = "https://comicextra.com/";
     }
 
     get name() {
@@ -14,10 +14,12 @@ class ComicExtraCom {
         data = await data.text();
         data = data.match(/<div class="cartoon-box">[\s\S]*?<\/div>/g);
 
+        data = data.filter(item => item.includes('href'));
         data = data.map(item => ({
             name: /<h3>.*>(.*)<\/a><\/h3>/gi.exec(item)[1],
-            id: /<a href="(.*?)" class="image">/g.exec(item)[1].replace('http://www.comicextra.com/comic/', '')
+            id: /<a href="(.*?)" class="image">/g.exec(item)[1].replace('https://comicextra.com/comic/', '')
         }));
+
         return data;
     }
 
@@ -31,8 +33,9 @@ class ComicExtraCom {
     }
 
     async details(volume, issue) {
-        let data = await fetch(`${this.baseUrl}/${volume}/chapter-${issue}`);
+        let data = await fetch(`${this.baseUrl}${volume}/chapter-${issue}`);
         data = await data.text();
+        console.log(`${this.baseUrl}${volume}/chapter-${issue}`);
         data = /<div class="label1">of (.*?)<\/div>/g.exec(data)[1];
         return {totalPages: Number(data)};
     }
