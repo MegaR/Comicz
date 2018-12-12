@@ -44,7 +44,11 @@ class ComicExtraCom {
 
     async page(volume, issue, page) {
         const urls = await this.urls(volume, issue);
-        const data = await fetch(`${this.baseUrl}reader/${urls[page]}`);
+        console.log(`${this.baseUrl}reader/${urls[page]}`);
+        const data = await fetch(`${this.baseUrl}reader/${urls[page]}`, {
+            headers: { 'referer': this.baseUrl }
+        });
+        console.log(data);
         return await data.buffer();
     }
 
