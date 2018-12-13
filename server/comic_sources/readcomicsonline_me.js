@@ -22,10 +22,22 @@ class ComicExtraCom {
         return result;
     }
 
+    fixIssuePart(issue) {
+        if(!issue.includes('.')) {
+            return issue;
+        }
+        const alphabet = ' ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+        let split = issue.split('.');
+        split[1] = alphabet[Number(split[1])];
+        return split[0]+split[1];
+    }
+
     async urls(volume, issue) {
+        issue = this.fixIssuePart(issue);
+
         let data = await fetch(`${this.baseUrl}${volume}`);
         data = await data.text();
-        let regex = new RegExp(`<li class="chapter"><a href="([\\d\\w:\\/\\.\\(\\)]*_Issue_0?${issue})">`,'g');
+        let regex = new RegExp(`<li class="chapter"><a href="([\\d\\w:\\/\\.\\(\\)]*_Issue_0*?${issue})">`,'g');
         const url = regex.exec(data)[1] + '/?q=fullchapter';
         data = await fetch(url);
         data = await data.text();
