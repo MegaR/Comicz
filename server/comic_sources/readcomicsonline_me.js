@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-class ComicExtraCom {
+class ReadComicsOnlineMe {
     constructor() {
         this.baseUrl = "https://readcomicsonline.me/";
     }
@@ -66,4 +66,4 @@ class ComicExtraCom {
     }
 }
 
-module.exports = new ComicExtraCom();
+module.exports = new ReadComicsOnlineMe();
