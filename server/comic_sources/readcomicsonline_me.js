@@ -25,12 +25,8 @@ class ComicExtraCom {
     async urls(volume, issue) {
         let data = await fetch(`${this.baseUrl}${volume}`);
         data = await data.text();
-        let regex = /<li class="chapter"><a href="[a-zA-Z_:\/.0-9]*\/([a-zA-Z_0-9]*)\/.*?">/g;
-        volume = regex.exec(data)[1];
-
-        volume = volume.replace('-','_');
-        if(issue.length < 2) issue = '0' + issue;
-        const url = `${this.baseUrl}reader/${volume}/${volume}_Issue_${issue}/?q=fullchapter`;
+        let regex = new RegExp(`<li class="chapter"><a href="([\\d\\w:\\/\\.\\(\\)]*_Issue_0?${issue})">`,'g');
+        const url = regex.exec(data)[1] + '/?q=fullchapter';
         data = await fetch(url);
         data = await data.text();
         regex = /<img src="(.*?)" \/><br \/>/g;
@@ -44,11 +40,11 @@ class ComicExtraCom {
 
     async page(volume, issue, page) {
         const urls = await this.urls(volume, issue);
-        console.log(`${this.baseUrl}reader/${urls[page]}`);
-        const data = await fetch(`${this.baseUrl}reader/${urls[page]}`, {
+        const url = `${this.baseUrl}reader/${urls[page]}`;
+        console.log(url);
+        const data = await fetch(url, {
             headers: { 'referer': this.baseUrl }
         });
-        console.log(data);
         return await data.buffer();
     }
 
