@@ -16,7 +16,12 @@ class ReadcomicsWebsite {
         return data;
     }
 
+    fixIssuePart(issue) {
+        return issue.replace('.', '-')
+    }
+
     async page(volume, issue, page) {
+        issue = this.fixIssuePart(issue);
         page += 1;
         if(page.toString().length < 2) {
             page = '0' + page.toString();
@@ -27,6 +32,7 @@ class ReadcomicsWebsite {
     }
 
     async details(volume, issue) {
+        issue = this.fixIssuePart(issue);
         let data = await fetch(`${this.baseUrl}/comic/${volume}/${issue}`);
         data = await data.text();
         data = data.match(/pages = (\[.*?\])/g)[0].match(/\[.*\]/g)[0];
