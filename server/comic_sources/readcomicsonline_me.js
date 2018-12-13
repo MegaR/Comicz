@@ -35,10 +35,14 @@ class ReadComicsOnlineMe {
     async urls(volume, issue) {
         issue = this.fixIssuePart(issue);
 
+        console.log(`${this.baseUrl}${volume}`);
         let data = await fetch(`${this.baseUrl}${volume}`);
         data = await data.text();
-        let regex = new RegExp(`<li class="chapter"><a href="([\\d\\w:\\/\\.\\(\\)]*_Issue_0*?${issue})">`,'g');
+
+        //double escape seems necessary here :|
+        let regex = new RegExp(`<li class="chapter"><a href="([\\d\\w:\\/\\.\\(\\)-]*_Issue_0*?${issue})">`,'g');
         const url = regex.exec(data)[1] + '/?q=fullchapter';
+        console.log(url);
         data = await fetch(url);
         data = await data.text();
         regex = /<img src="(.*?)" \/><br \/>/g;
