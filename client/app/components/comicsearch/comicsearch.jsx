@@ -1,9 +1,9 @@
 import React from "react";
 import api from "../../services/api";
-import {Card, List, ListItem, Subheader} from "material-ui";
+import {Card, List, ListItem, Subheader, IconButton, Menu, MenuItem} from "material-ui";
 import {LoadingIndicator, LoadingIndicatorSmall} from "../loadingindicator/loadingindicator";
 import Link from "react-router-dom/es/Link";
-import {CircularProgress} from "material-ui";
+import './comicsearch.scss';
 
 export class ComicSearch extends React.Component {
     constructor(props) {
@@ -17,41 +17,41 @@ export class ComicSearch extends React.Component {
 
     async search(issue) {
         const sources = await api.comicSources();
-        let results = sources.map(item => ({source: item}) );
+        let results = sources.map(item => ({source: item}));
         this.setState({results: results});
 
         sources.forEach(x => {
             const source = x;
             api.searchComic(source, issue.volume.name)
-            .then(issues => {
-                for(let i = 0; i < results.length; i++) {
-                    if(results[i].source == source) {
-                        results[i].results = issues;
-                        results[i].bestResult = this.getBestResult(issue.volume, issues);
-                        this.setState({results: results});
+                .then(issues => {
+                    for (let i = 0; i < results.length; i++) {
+                        if (results[i].source == source) {
+                            results[i].results = issues;
+                            results[i].bestResult = this.getBestResult(issue.volume, issues);
+                            this.setState({results: results});
+                        }
                     }
-                }
-            })
-            .catch(error => {
-                console.error(error);
+                })
+                .catch(error => {
+                    console.error(error);
 
-                for(let i = 0; i < results.length; i++) {
-                    if(results[i].source == source) {
-                        results[i].results = issues;
-                        this.setState({results: results});
+                    for (let i = 0; i < results.length; i++) {
+                        if (results[i].source == source) {
+                            results[i].results = issues;
+                            this.setState({results: results});
+                        }
                     }
-                }
-            });
+                });
         })
     }
 
     getBestResult(volume, results) {
         let filtered = results.filter(item => item.name.includes(volume.name) && item.name.includes(volume.startYear));
-        if(filtered.length === 0) {
+        if (filtered.length === 0) {
             filtered = results.filter(item => item.name.includes(volume.name));
         }
 
-        return filtered.sort((a,b) => a.name.length - b.name.length)[0];
+        return filtered.sort((a, b) => a.name.length - b.name.length)[0];
         // const search = volume.name;
         // const sorted = results.sort((a,b) => levenshtein(a.name, search) - levenshtein(b.name, search));
         // return sorted[0];
@@ -70,7 +70,7 @@ export class ComicSearch extends React.Component {
             </div>
         }
 
-        return <div>
+        return <div className="comicsearch">
             <Card>
                 <List>{this.results()}</List>
             </Card>
@@ -83,27 +83,36 @@ export class ComicSearch extends React.Component {
         return this.state.results.map(source => {
             let items = [<Subheader key={source.source}>{source.source}</Subheader>];
 
-            if(!source.results) {
-                items.push(<LoadingIndicatorSmall key={source.source+ '/loading'}/>);
+            if (!source.results) {
+                items.push(<LoadingIndicatorSmall key={source.source + '/loading'}/>);
                 return items;
             }
 
             if (source.bestResult) {
-                items.push(this.getListItem(issue, source, source.bestResult));
+                items.push(this.getListItem(issue, source, source.bestResult, 0));
             }
 
             items.push(<ListItem key={source.source + '/more'}
                                  secondaryText={'More...'}
                                  primaryTogglesNestedList={true}
-                                 nestedItems={source.results.map(result => this.getListItem(issue, source, result))} />);
+                                 nestedItems={source.results.map(result => this.getListItem(issue, source, result, 1))}/>);
 
             return items;
         });
     }
 
-    getListItem(issue, source, result) {
-        return <ListItem key={source.source + '/' + result.id} primaryText={result.name} containerElement={
-            <Link to={`/read/${issue.id}/${source.source}/${result.id}/${issue.issueNumber}`}/>
-        }/>
+    getListItem(issue, source, result, nestedLevel) {
+        return <div key={source.source + '/' + result.id} className="list-item">
+            <ListItem primaryText={result.name}
+                      nestedLevel={nestedLevel}
+                      containerElement={
+                          <Link to={`/read/${issue.id}/${source.source}/${result.id}/${issue.issueNumber}`}/>
+                      }
+            />
+            <IconButton className="zoom-in"
+                        iconClassName="material-icons"
+                        href={`/api/downloader/download/${issue.id}/${source.source}/${result.id}/${issue.issueNumber}`}
+            >cloud_download</IconButton>
+        </div>;
     }
 }

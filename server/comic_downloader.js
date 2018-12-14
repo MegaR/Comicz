@@ -1,5 +1,7 @@
 const storage = require('./storage.js');
 const Cache = require('./cache.js');
+const archiver = require('archiver');
+const stream = require('stream');
 
 const comicSources = [
     require('./comic_sources/readcomicsonline_ru.js'),
@@ -57,6 +59,21 @@ class ComicDownloader {
                     res.status(500).json(error);
                 });
         });
+
+        app.get('/downloader/download/:issueId/:source/:volumeName/:issue', (req, res) => {
+            const stream = this.getFileStream(req.params.volumeName, req.params.issueId, res);
+            this.download(
+                req.params.issueId,
+                req.params.source,
+                req.params.volumeName,
+                req.params.issue,
+                stream
+            )
+                .catch(error => {
+                    console.error(error);
+                    res.status(500).json(error);
+                });
+        });
     }
 
     async search(sourceName, volumeName) {
@@ -105,6 +122,48 @@ class ComicDownloader {
 
         this.cache.store(`details/${issueId}/${sourceName}/${volumeName}/${issueNr}`, details);
         return details;
+    }
+
+    async download(issueId, sourceName, volumeName, issueNr, stream) {
+        let archive = archiver('zip', {zlib: {level: 9}});
+
+        archive.on('warning', function(err) {
+            console.warn('archive', err);
+        });
+
+        archive.pipe(stream);
+
+        const details = await this.details(issueId, sourceName, volumeName, issueNr);
+        for(let i = 0; i < details.totalPages; i++) {
+            let filename = i + '';
+            while(filename.length < 3) filename = '0' + filename;
+            filename += '.jpg';
+            const page = await this.page(issueId, sourceName, volumeName, issueNr, i);
+            archive.append(page, {name: filename});
+        }
+
+        archive.finalize();
+    }
+
+    getFileStream(volumeName, issueNr, response) {
+        while(issueNr.length < 3) issueNr = 0+issueNr;
+        const filename = `${volumeName}_issue-${issueNr}.cbz`;
+        response.writeHead(200, {
+            'Content-Type': 'application/octet-stream',
+            'Content-Disposition': `attachment; filename="${filename}"`
+        });
+
+        const writable = stream.Writable();
+        writable.write = (chunk, encoding, next) => {
+            response.write(chunk);
+            if(next) next();
+        };
+
+        writable.end = () => {
+            response.end();
+        };
+
+        return writable;
     }
 }
 
