@@ -41,15 +41,20 @@ class ReadComicsOnlineMe {
 
         //double escape seems necessary here :|
         let regex = new RegExp(`<li class="chapter"><a href="([\\d\\w:\\/\\.\\(\\)-]*_Issue_0*?${issue})">`,'g');
-        const url = regex.exec(data)[1] + '/?q=fullchapter';
+        let url = regex.exec(data);
+        if(!url) {
+            console.log('couldnt match issue ' + issue);
+            return [];
+        }
+        url = url[1] + '/?q=fullchapter';
         console.log(url);
         data = await fetch(url);
         data = await data.text();
-        regex = /<img src="(.*?)" \/><br \/>/g;
+        regex = /<img (class="picture" )?src="(.*?)" \/><br \/>/g;
         let urls = [];
         let match;
         while ((match = regex.exec(data)) !== null) {
-            urls.push(match[1]);
+            urls.push(match[2]);
         }
         return urls;
     }
