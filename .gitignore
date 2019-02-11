@@ -3,3 +3,4 @@ node_modules
 .idea
 /client/public/bundle.js
 *.iml
+*.code-workspace
