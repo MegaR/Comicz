@@ -11,6 +11,7 @@ export class ConfigService {
     constructor() {
         const location = join(process.cwd(), 'config.json');
         if (existsSync(location)) {
+            this.logger.log('Config found');
             this.config = <Config> {...defaultConfig, ...require(location)};
         } else {
             this.logger.warn('No custom config found. Using default only.');
