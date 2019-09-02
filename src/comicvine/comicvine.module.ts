@@ -5,6 +5,6 @@ import {ConfigModule} from '../config/config.module';
 
 @Module({
     imports: [ConfigModule, HttpModule],
-    providers: [TestResolver, ComicVineService]
+    providers: [TestResolver, ComicVineService],
 })
 export class ComicVineModule {}

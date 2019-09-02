@@ -15,14 +15,14 @@ import {ComicVineModule} from './comicvine/comicvine.module';
                 debug: configService.get().debug,
                 playground: configService.get().dev,
                 tracing: configService.get().debug,
-                autoSchemaFile: 'schema.gql'
-            })
+                autoSchemaFile: 'schema.gql',
+            }),
         }),
         ConfigModule,
-        ComicVineModule
+        ComicVineModule,
     ],
     controllers: [AppController],
-    providers: [AppService]
+    providers: [AppService],
 })
 export class AppModule {
 }

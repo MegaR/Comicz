@@ -12,10 +12,10 @@ export class ConfigService {
         const location = join(process.cwd(), 'config.json');
         if (existsSync(location)) {
             this.logger.log('Config found');
-            this.config = <Config> {...defaultConfig, ...require(location)};
+            this.config = {...defaultConfig, ...require(location)} as Config;
         } else {
             this.logger.warn('No custom config found. Using default only.');
-            this.config = <Config> defaultConfig;
+            this.config = defaultConfig as Config;
         }
     }
 
