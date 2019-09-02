@@ -2,6 +2,7 @@
   "port": 3000,
   "debug": false,
   "dev": false,
+  "comicvineApiKey": null,
   "database": {
 
   }

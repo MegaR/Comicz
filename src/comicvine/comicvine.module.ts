@@ -1,7 +1,10 @@
-import {Module} from '@nestjs/common';
+import {HttpModule, Module} from '@nestjs/common';
 import {TestResolver} from './test.resolver';
+import {ComicVineService} from './comicvine.service';
+import {ConfigModule} from '../config/config.module';
 
 @Module({
-    providers: [TestResolver]
+    imports: [ConfigModule, HttpModule],
+    providers: [TestResolver, ComicVineService]
 })
 export class ComicVineModule {}
