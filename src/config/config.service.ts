@@ -1,7 +1,7 @@
 import {join} from 'path';
 import {existsSync} from 'fs';
 import * as defaultConfig from './config.default.json';
-import Config from './config.inferface';
+import Config from './config.interface';
 import {Logger} from '@nestjs/common';
 
 export class ConfigService {
