@@ -19,7 +19,7 @@ export class ComicVineService {
     // this.call('search', {query: 'spider-men', resources: 'issue'});
   }
 
-  public async call(url: string, params: {}): Promise<any> {
+  public async call(url: string, params?: {}): Promise<any> {
     const defaultParams = { format: 'json', api_key: this.comicVineAPIKey };
 
     const response = await this.httpService
