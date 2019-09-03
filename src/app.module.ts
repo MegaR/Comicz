@@ -7,21 +7,21 @@ import { ConfigService } from './config/config.service';
 import { ComicVineModule } from './comicvine/comicvine.module';
 
 @Module({
-  imports: [
-    GraphQLModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        debug: configService.get().debug,
-        playground: configService.get().dev,
-        tracing: configService.get().debug,
-        autoSchemaFile: 'schema.gql',
-      }),
-    }),
-    ConfigModule,
-    ComicVineModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+    imports: [
+        GraphQLModule.forRootAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: async (configService: ConfigService) => ({
+                debug: configService.get().debug,
+                playground: configService.get().dev,
+                tracing: configService.get().debug,
+                autoSchemaFile: 'schema.gql',
+            }),
+        }),
+        ConfigModule,
+        ComicVineModule,
+    ],
+    controllers: [AppController],
+    providers: [AppService],
 })
 export class AppModule {}
