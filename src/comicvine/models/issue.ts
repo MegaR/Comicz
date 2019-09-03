@@ -30,6 +30,8 @@ export class Issue {
   storeDate: string;
   @Field()
   image: ComicVineImages;
+  @Field(type => ComicVineReference)
+  volume: ComicVineReference;
   @Field(type => [ComicVineReference])
   characterCredits: ComicVineReference[];
   @Field(type => [ComicVineReference])
@@ -44,6 +46,4 @@ export class Issue {
   storyArcCredits: ComicVineReference[];
   @Field(type => [ComicVineReference])
   teamCredits: ComicVineReference[];
-  @Field(type => [ComicVineReference])
-  volume: ComicVineReference[];
 }

@@ -1,6 +1,7 @@
 import { Issue } from './models/issue';
 import { ComicVineService } from './comicvine.service';
 import { Args, Query, Resolver } from '@nestjs/graphql';
+import {ComicVineReference} from './models/comicvinereference';
 
 @Resolver(of => Issue)
 export class IssueResolver {
@@ -35,14 +36,23 @@ export class IssueResolver {
         originalUrl: result.image.original_url,
         imageTags: result.image.image_tags,
       },
-      characterCredits: [],
-      charactersDiedIn: [],
-      conceptCredits: [],
-      locationCredits: [],
-      personCredits: [],
-      storyArcCredits: [],
-      teamCredits: [],
-      volume: [],
+      volume: this.parseReference(result.volume),
+      characterCredits: result.character_credits ? result.character_credits.map(item => this.parseReference(item)) : [],
+      charactersDiedIn: result.characters_died_in ? result.characters_died_in.map(item => this.parseReference(item)) : [],
+      conceptCredits: result.concept_credits ? result.concept_credits.map(item => this.parseReference(item)) : [],
+      locationCredits: result.location_credits ? result.location_credits.map(item => this.parseReference(item)) : [],
+      personCredits: result.person_credits ? result.person_credits.map(item => this.parseReference(item)) : [],
+      storyArcCredits: result.story_arc_credits ? result.story_arc_credits.map(item => this.parseReference(item)) : [],
+      teamCredits: result.team_credits ? result.team_credits.map(item => this.parseReference(item)) : [],
+    };
+  }
+
+  parseReference(raw: any): ComicVineReference {
+    return {
+      id: raw.id,
+      name: raw.name,
+      apiDetailUrl: raw.api_detail_url,
+      siteDetailUrl: raw.site_detail_url,
     };
   }
 }
