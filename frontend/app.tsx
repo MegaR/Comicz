@@ -5,5 +5,5 @@ FocusStyleManager.onlyShowFocusOnTabs();
 
 export default function App() {
     console.log('test');
-    return <div className={Classes.DARK}>Hello, world2!</div>;
+    return <div className={Classes.DARK}>Hello, world50asdasdasd!</div>;
 }

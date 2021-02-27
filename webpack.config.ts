@@ -1,6 +1,7 @@
 import webpack from 'webpack';
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import LiveReloadPlugin from 'webpack-livereload-plugin';
 
 const config: webpack.Configuration = {
     mode: 'development',
@@ -54,6 +55,9 @@ const config: webpack.Configuration = {
         new webpack.DefinePlugin({
             'process.env': '{}',
             'global': {},
+        }),
+        new LiveReloadPlugin({
+            appendScriptTag: true,
         }),
     ],
     devtool: 'source-map',
