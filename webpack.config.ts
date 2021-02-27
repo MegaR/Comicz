@@ -6,6 +6,7 @@ const config: webpack.Configuration = {
     mode: 'development',
     entry: {
         app: path.join(__dirname, 'frontend', 'index.tsx'),
+        style: path.join(__dirname, 'frontend', 'style.scss'),
     },
     target: 'web',
     resolve: {
@@ -27,6 +28,22 @@ const config: webpack.Configuration = {
                     },
                 },
             },
+            {
+                test: /\.s[ac]ss$/i,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'resolve-url-loader',
+                    'sass-loader',
+                ],
+            },
+            {
+                test: /\.(woff2?|ttf|otf|eot|svg)$/,
+                loader: 'file-loader',
+                options: {
+                    name: '[path][name].[ext]',
+                },
+            },
         ],
     },
     plugins: [
@@ -34,14 +51,21 @@ const config: webpack.Configuration = {
             template: 'frontend/index.html',
         }),
         new webpack.HotModuleReplacementPlugin(),
+        new webpack.DefinePlugin({
+            'process.env': '{}',
+            'global': {},
+        }),
     ],
-    devtool: 'inline-source-map',
+    devtool: 'source-map',
     output: {
         filename: '[name].js',
         path: path.resolve(__dirname, 'dist', 'frontend'),
     },
     watchOptions: {
         ignored: ['**/node_modules', 'backend/**'],
+    },
+    optimization: {
+        minimize: true,
     },
 };
 export default config;

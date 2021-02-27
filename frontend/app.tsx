@@ -1,5 +1,9 @@
 import React from 'react';
+import { Classes, FocusStyleManager } from '@blueprintjs/core';
+
+FocusStyleManager.onlyShowFocusOnTabs();
 
 export default function App() {
-    return <h1>Hello, world2!</h1>;
+    console.log('test');
+    return <div className={Classes.DARK}>Hello, world2!</div>;
 }
