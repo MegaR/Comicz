@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from './config/config.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigService } from './config/config.service';
 import { ComicVineModule } from './comicvine/comicvine.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
     imports: [
@@ -20,8 +21,11 @@ import { ComicVineModule } from './comicvine/comicvine.module';
         }),
         ConfigModule,
         ComicVineModule,
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '..', 'frontend'),
+        }),
     ],
     controllers: [AppController],
-    providers: [AppService],
+    providers: [],
 })
 export class AppModule {}

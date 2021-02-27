@@ -1,5 +1,13 @@
 {
     "compilerOptions": {
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "moduleResolution": "node",
+        "isolatedModules": true,
         "module": "commonjs",
         "declaration": true,
         "removeComments": true,
@@ -8,13 +16,14 @@
         "target": "es2017",
         "sourceMap": true,
         "outDir": "./dist",
-        "baseUrl": "./",
+        "baseUrl": ".",
         "incremental": true,
         "resolveJsonModule": true,
         "esModuleInterop": true,
+        "jsx": "react",
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
     },
-    "exclude": ["node_modules", "dist", "test", "**/*spec.ts", "frontend"]
+    "exclude": ["node_modules", "dist", "test", "**/*spec.ts", "backend", "coverage"]
 }
